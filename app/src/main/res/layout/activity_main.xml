@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp" >
+
+
+    <!-- text for the first page -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:text="Find your parking slot fast with ParkMate"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <!-- Next Button -->
+    <Button
+        android:id="@+id/btnlogreg"
+        android:layout_width="77dp"
+        android:layout_height="77dp"
+        android:layout_marginTop="90dp"
+        android:backgroundTint="#800080"
+        android:text=">"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF" />
+
+
+</LinearLayout>

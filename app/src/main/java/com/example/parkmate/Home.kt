@@ -3,8 +3,8 @@ package com.example.parkmate
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.activity.enableEdgeToEdge
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-
 
 class Home : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,6 +14,16 @@ class Home : AppCompatActivity() {
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_nav)
 
+        // 🔹 Find the TextView from XML
+        val welcomeText = findViewById<TextView>(R.id.welcomeText)
+
+        // 🔹 Get username & plate from Intent
+        val username = intent.getStringExtra("username") ?: "User"
+        val plate = intent.getStringExtra("plate") ?: "N/A"
+
+        // 🔹 Set text in TextView
+        welcomeText.text = "Welcome, $username\nPlate: $plate"
+
         bottomNavigationView.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.nav_home -> {
@@ -22,7 +32,6 @@ class Home : AppCompatActivity() {
                         .commit()
                     true
                 }
-
                 R.id.nav_booking -> {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, BookingFragment())

@@ -12,7 +12,12 @@
           "package_name": "com.example.parkmate"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "589692163671-9vq3muqagu53f2hbqo7atuc57tmforjf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAjWfh6yWV-kU2cKLwRD2s_GK-DzEcmOoM"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "589692163671-9vq3muqagu53f2hbqo7atuc57tmforjf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

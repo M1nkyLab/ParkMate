@@ -32,6 +32,24 @@
         android:inputType="textEmailAddress"
         android:layout_marginBottom="16dp"/>
 
+    <!-- Username -->
+    <EditText
+        android:id="@+id/registerUsernameInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Username"
+        android:inputType="textPersonName"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Plate Number -->
+    <EditText
+        android:id="@+id/registerPlateInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Plate Number"
+        android:inputType="textCapCharacters"
+        android:layout_marginBottom="16dp"/>
+
     <!-- Password -->
     <EditText
         android:id="@+id/registerPasswordInput"

@@ -20,12 +20,14 @@ class Register : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
 
         val emailInput: EditText = findViewById(R.id.registerEmailInput)
+        val usernameInput: EditText = findViewById(R.id.registerUsernameInput)
+        val plateInput: EditText = findViewById(R.id.registerPlateInput)
         val passwordInput: EditText = findViewById(R.id.registerPasswordInput)
         val confirmPasswordInput: EditText = findViewById(R.id.registerConfirmPasswordInput)
         val registerButton: Button = findViewById(R.id.registerButton)
         val loginRedirect: TextView = findViewById(R.id.loginRedirect)
 
-        // 🔹 Make "Already have account? Login" clickable
+        // 🔹 Redirect to Login
         loginRedirect.setOnClickListener {
             val intent = Intent(this, Login::class.java)
             startActivity(intent)
@@ -33,11 +35,13 @@ class Register : AppCompatActivity() {
         }
 
         registerButton.setOnClickListener {
-            val email = emailInput.text.toString()
-            val password = passwordInput.text.toString()
-            val confirmPassword = confirmPasswordInput.text.toString()
+            val email = emailInput.text.toString().trim()
+            val username = usernameInput.text.toString().trim()
+            val plate = plateInput.text.toString().trim()
+            val password = passwordInput.text.toString().trim()
+            val confirmPassword = confirmPasswordInput.text.toString().trim()
 
-            if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            if (email.isEmpty() || username.isEmpty() || plate.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
             } else if (password != confirmPassword) {
                 Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
@@ -46,7 +50,13 @@ class Register : AppCompatActivity() {
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             Toast.makeText(this, "Registration Successful", Toast.LENGTH_SHORT).show()
-                            finish() // go back to Login page
+
+                            // ✅ Pass username + plate to Home activity
+                            val intent = Intent(this, Home::class.java)
+                            intent.putExtra("username", username)
+                            intent.putExtra("plate", plate)
+                            startActivity(intent)
+                            finish()
                         } else {
                             Toast.makeText(this, "Error: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                         }

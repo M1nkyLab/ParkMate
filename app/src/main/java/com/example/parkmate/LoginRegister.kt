@@ -30,33 +30,39 @@ class LoginRegister : AppCompatActivity() {
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
 
-        // Configure Google Sign-In (ONLY ONCE ✅)
+        // Configure Google Sign-In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id)) // from google-services.json
             .requestEmail()
             .build()
 
-        // Create Google Sign-In client
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        // Buttons from XML
+        // Buttons
         val goToLogin: Button = findViewById(R.id.goToLogin)
         val goToRegister: Button = findViewById(R.id.goToRegister)
         val googleBtn: Button = findViewById(R.id.googleSignInBtn)
 
-        // Normal Login button → go to Login activity
         goToLogin.setOnClickListener {
             startActivity(Intent(this, Login::class.java))
         }
 
-        // Register button → go to Register activity
         goToRegister.setOnClickListener {
             startActivity(Intent(this, Register::class.java))
         }
 
-        // Google Sign-In button
         googleBtn.setOnClickListener {
             signInWithGoogle()
+        }
+    }
+
+    // Auto-login if already signed in
+    override fun onStart() {
+        super.onStart()
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            startActivity(Intent(this, Home::class.java))
+            finish()
         }
     }
 
@@ -74,7 +80,8 @@ class LoginRegister : AppCompatActivity() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
             try {
                 val account: GoogleSignInAccount = task.getResult(ApiException::class.java)
-                firebaseAuthWithGoogle(account.idToken!!)
+                account.idToken?.let { firebaseAuthWithGoogle(it) }
+                    ?: Toast.makeText(this, "Google ID Token is null", Toast.LENGTH_SHORT).show()
             } catch (e: ApiException) {
                 Log.w("GoogleSignIn", "Google sign in failed", e)
                 Toast.makeText(this, "Google Sign-In failed", Toast.LENGTH_SHORT).show()
@@ -98,5 +105,4 @@ class LoginRegister : AppCompatActivity() {
                 }
             }
     }
-
 }

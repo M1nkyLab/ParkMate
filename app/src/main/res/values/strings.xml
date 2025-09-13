@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">ParkMate</string>
-    <string name="default_web_client_id">1234567890-abcdefg.apps.googleusercontent.com</string>
+    <string name="client_id">589692163671-9vq3muqagu53f2hbqo7atuc57tmforjf.apps.googleusercontent.com</string>
 
 </resources>

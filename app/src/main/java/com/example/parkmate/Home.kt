@@ -14,16 +14,6 @@ class Home : AppCompatActivity() {
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_nav)
 
-        // 🔹 Find the TextView from XML
-        val welcomeText = findViewById<TextView>(R.id.welcomeText)
-
-        // 🔹 Get username & plate from Intent
-        val username = intent.getStringExtra("username") ?: "User"
-        val plate = intent.getStringExtra("plate") ?: "N/A"
-
-        // 🔹 Set text in TextView
-        welcomeText.text = "Welcome, $username\nPlate: $plate"
-
         bottomNavigationView.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.nav_home -> {

@@ -32,6 +32,11 @@ class ProfileFragment : Fragment() {
             startActivity(intent)
         }
 
+            val AddnewVehicleButton: Button = view.findViewById(R.id.AddnewVehicleButton)
+            AddnewVehicleButton.setOnClickListener {
+                val intent = Intent(requireContext(), ActivityVehicle::class.java)
+                startActivity(intent)
+            }
         return view
     }
 }

@@ -41,6 +41,14 @@
             android:name=".Home"
             android:exported="true" />
 
+        <activity
+            android:name=".ActivityVehicle"
+            android:exported="true" />
+
+        <activity
+            android:name=".AddNewVehicle"
+            android:exported="true" />
+
 
     </application>
 

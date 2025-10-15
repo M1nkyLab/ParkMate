@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Header -->
+        <TextView
+            android:id="@+id/adminTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Admin Dashboard"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="24dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Welcome, Admin Haziq"
+            android:layout_margin="23dp"
+            android:textStyle="bold"
+            android:textSize="19dp"
+            android:gravity="center"
+            />
+
+        <!-- Grid for Admin Options -->
+        <GridLayout
+            android:id="@+id/adminGrid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="2"
+            android:alignmentMode="alignMargins"
+            android:useDefaultMargins="true">
+
+            <!-- Manage Slots -->
+            <LinearLayout
+                android:id="@+id/btnManageSlots"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@drawable/admin_card_bg"
+                android:padding="20dp"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_columnWeight="1"
+                android:elevation="6dp">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="View Parking" />
+            </LinearLayout>
+
+            <!-- View Bookings -->
+            <LinearLayout
+                android:id="@+id/btnViewBookings"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@drawable/admin_card_bg"
+                android:padding="20dp"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_columnWeight="1"
+                android:elevation="6dp">
+
+                <ImageView
+
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+ />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="View Booking" />
+            </LinearLayout>
+
+            <!-- View Users -->
+            <LinearLayout
+                android:id="@+id/btnViewUsers"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@drawable/admin_card_bg"
+                android:padding="20dp"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_columnWeight="1"
+                android:elevation="6dp">
+
+                <ImageView
+
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+              />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Manage Users" />
+            </LinearLayout>
+
+            <!-- Reports -->
+            <LinearLayout
+                android:id="@+id/btnReports"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@drawable/admin_card_bg"
+                android:padding="20dp"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_columnWeight="1"
+                android:elevation="6dp">
+
+                <ImageView
+
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="View Reports"
+                    />
+            </LinearLayout>
+
+        </GridLayout>
+
+        <!-- button where it go to the qr page   -->
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Scan Qr" />
+
+        <!-- button where the admin can log out  -->
+        <Button
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="44dp"
+            android:text="Log Out" />
+
+    </LinearLayout>
+
+</ScrollView>
+

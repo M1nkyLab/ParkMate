@@ -26,27 +26,51 @@
 
         <!-- First page -->
         <activity
-            android:name=".LoginRegister"
+            android:name=".Auth.Auth_LoginRegister"
             android:exported="true" />
 
         <activity
-            android:name=".Register"
+            android:name=".Auth.Auth_Register"
             android:exported="true" />
 
         <activity
-            android:name=".Login"
+            android:name=".Auth.Auth_Login"
             android:exported="true" />
 
         <activity
-            android:name=".Home"
+            android:name=".User.User_Home"
             android:exported="true" />
 
         <activity
-            android:name=".ActivityVehicle"
+            android:name=".User.User_VehicleActivity"
             android:exported="true" />
 
         <activity
-            android:name=".AddNewVehicle"
+            android:name=".User.User_AddNewVehicle"
+            android:exported="true" />
+
+        <activity
+            android:name=".User.User_AdvanceBooking"
+            android:exported="true" />
+
+        <activity
+            android:name=".User.User_SelectSlot_RealtimeBooking"
+            android:exported="true" />
+
+        <activity
+            android:name=".User.User_BookingSummary"
+            android:exported="true" />
+
+        <activity
+            android:name=".User.User_CompletePayment"
+            android:exported="true" />
+
+        <activity
+            android:name=".User.User_Payment"
+            android:exported="true" />
+
+        <activity
+            android:name=".Admin.Admin_MainPage"
             android:exported="true" />
 
 

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:padding="24dp">
+
+    <!-- Welcome Header with Plate Info (Managed by Fragment) -->
+    <TextView
+        android:id="@+id/welcomeText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:text="Welcome, User\nPlate: N/A"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="#333333" />
+
+    <!-- Real-time Booking Widget (Now Clickable) -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardRealtimeBooking"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="8dp"
+        app:strokeColor="#800080"
+        app:strokeWidth="1dp">
+
+        <TextView
+            android:id="@+id/realtimebooking"
+            android:layout_width="match_parent"
+            android:layout_height="106dp"
+            android:gravity="start|center_vertical"
+            android:padding="20dp"
+            android:text="Real-time Availability and Booking"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#800080" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Booking By Date Widget (Now Clickable) -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardAdvanceBooking"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="8dp"
+        app:strokeColor="@android:color/darker_gray"
+        app:strokeWidth="1dp">
+
+        <TextView
+            android:id="@+id/bydatebook"
+            android:layout_width="match_parent"
+            android:layout_height="113dp"
+            android:gravity="start|center_vertical"
+            android:padding="20dp"
+            android:text="Advance Booking (By Date)"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>

@@ -5,8 +5,7 @@ import android.content.Intent
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import com.example.parkmate.User.User_Home
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,10 +13,10 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
-        val btnlogreg : Button = findViewById(R.id.btnlogreg)
+        val btnstart : Button = findViewById(R.id.btnstart)
 
-        btnlogreg.setOnClickListener {
-            val intent = Intent(this, LoginRegister::class.java)
+        btnstart.setOnClickListener {
+            val intent = Intent(this, User_Home::class.java)
             startActivity(intent)
         }
     }

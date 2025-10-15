@@ -42,16 +42,16 @@
         android:inputType="textPassword"
         android:layout_marginBottom="24dp"/>
 
-    <!-- Login Button -->
+    <!-- Auth_Login Button -->
     <Button
         android:id="@+id/loginButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Log In"
-        android:backgroundTint="#800080"
-        android:textColor="#FFFFFF"/>
+        android:backgroundTint="#000000"
+        android:textColor="#ffffff"/>
 
-    <!-- Redirect to Register -->
+    <!-- Redirect to Auth_Register -->
     <TextView
         android:id="@+id/registerRedirect"
         android:layout_width="wrap_content"

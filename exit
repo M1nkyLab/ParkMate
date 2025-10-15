@@ -1,0 +1,27 @@
+[33m3c4ed90[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m HEAD@{0}: checkout: moving from master to master
+[33m3c4ed90[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m HEAD@{1}: checkout: moving from mains to master
+[33m8ed7a5f[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mnewmaster[m[33m, [m[1;32mmains[m[33m, [m[1;32mmain[m[33m)[m HEAD@{2}: checkout: moving from newmaster to mains
+[33m8ed7a5f[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mnewmaster[m[33m, [m[1;32mmains[m[33m, [m[1;32mmain[m[33m)[m HEAD@{3}: checkout: moving from main to newmaster
+[33m8ed7a5f[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mnewmaster[m[33m, [m[1;32mmains[m[33m, [m[1;32mmain[m[33m)[m HEAD@{4}: checkout: moving from master to main
+[33m3c4ed90[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m HEAD@{5}: checkout: moving from main to master
+[33m8ed7a5f[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mnewmaster[m[33m, [m[1;32mmains[m[33m, [m[1;32mmain[m[33m)[m HEAD@{6}: reset: moving to origin/main
+[33me658899[m HEAD@{7}: checkout: moving from main to main
+[33me658899[m HEAD@{8}: commit: Success connect to the firebase realtime database and make the welcome page has user name and their plate number of the car and right now success making the profile fragment page has the username and their emain display
+[33m3c4ed90[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m HEAD@{9}: commit: Update the UI?
+[33m8ed7a5f[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mnewmaster[m[33m, [m[1;32mmains[m[33m, [m[1;32mmain[m[33m)[m HEAD@{10}: pull origin main --rebase (finish): returning to refs/heads/main
+[33m8ed7a5f[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mnewmaster[m[33m, [m[1;32mmains[m[33m, [m[1;32mmain[m[33m)[m HEAD@{11}: pull origin main --rebase (pick): google sign in feature and clean the profile fragment page
+[33m0324050[m HEAD@{12}: pull origin main --rebase (start): checkout 0324050998d93c12f4fd2cbd11e60fa417409d08
+[33m1b9ab5c[m HEAD@{13}: commit: google sign in feature and clean the profile fragment page
+[33m9258e54[m HEAD@{14}: checkout: moving from master to main
+[33mfbbe36d[m HEAD@{15}: checkout: moving from main to master
+[33m9258e54[m HEAD@{16}: checkout: moving from master to main
+[33m9258e54[m HEAD@{17}: rebase (finish): returning to refs/heads/master
+[33m9258e54[m HEAD@{18}: rebase (start): checkout HEAD
+[33m9258e54[m HEAD@{19}: Branch: renamed refs/heads/master to refs/heads/main
+[33m9258e54[m HEAD@{21}: commit: new files updated
+[33mbf56350[m HEAD@{22}: commit (amend): Merge remote-tracking branch 'origin/master'
+[33mcb0a8c7[m HEAD@{23}: checkout: moving from master to master
+[33mcb0a8c7[m HEAD@{24}: branch: Reset to master^0
+[33mcb0a8c7[m HEAD@{25}: merge origin/master: Merge made by the 'ort' strategy.
+[33me8943b4[m HEAD@{26}: commit: Second update which is
+[33m896c423[m HEAD@{27}: commit (initial): First Commit of the project

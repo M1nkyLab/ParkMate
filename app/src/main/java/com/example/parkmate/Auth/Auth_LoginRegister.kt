@@ -1,4 +1,4 @@
-package com.example.parkmate
+package com.example.parkmate.Auth
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +7,8 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.example.parkmate.R
+import com.example.parkmate.User.User_Home
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -15,7 +17,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 
-class LoginRegister : AppCompatActivity() {
+class Auth_LoginRegister : AppCompatActivity() {
 
     // Firebase authentication
     private lateinit var auth: FirebaseAuth
@@ -25,7 +27,7 @@ class LoginRegister : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.loginregister)
+        setContentView(R.layout.auth_loginregister)
 
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
@@ -44,11 +46,11 @@ class LoginRegister : AppCompatActivity() {
         val googleBtn: Button = findViewById(R.id.googleSignInBtn)
 
         goToLogin.setOnClickListener {
-            startActivity(Intent(this, Login::class.java))
+            startActivity(Intent(this, Auth_Login::class.java))
         }
 
         goToRegister.setOnClickListener {
-            startActivity(Intent(this, Register::class.java))
+            startActivity(Intent(this, Auth_Register::class.java))
         }
 
         googleBtn.setOnClickListener {
@@ -61,7 +63,7 @@ class LoginRegister : AppCompatActivity() {
         super.onStart()
         val currentUser = auth.currentUser
         if (currentUser != null) {
-            startActivity(Intent(this, Home::class.java))
+            startActivity(Intent(this, User_Home::class.java))
             finish()
         }
     }
@@ -96,11 +98,11 @@ class LoginRegister : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val user = auth.currentUser
-                    Log.d("FirebaseAuth", "Login success: ${user?.email}")
-                    startActivity(Intent(this, Home::class.java))
+                    Log.d("FirebaseAuth", "Auth_Login success: ${user?.email}")
+                    startActivity(Intent(this, User_Home::class.java))
                     finish()
                 } else {
-                    Log.e("FirebaseAuth", "Login failed", task.exception)
+                    Log.e("FirebaseAuth", "Auth_Login failed", task.exception)
                     Toast.makeText(this, "Authentication Failed.", Toast.LENGTH_SHORT).show()
                 }
             }

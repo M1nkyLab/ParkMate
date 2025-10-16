@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="24dp"
-    android:background="#ffffff"
+    android:background="#000000"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -24,28 +24,34 @@
         android:text="ParkMate"
         android:textSize="28sp"
         android:textStyle="bold"
-        android:textColor="#000000"
-        android:layout_marginBottom="40dp"/>
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="40dp" />
 
-    <!-- Auth_Login Button -->
+    <!-- Login Button -->
     <Button
         android:id="@+id/goToLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Log In"
-        android:backgroundTint="#000000"
-        android:textColor="#ffffff"
-        android:layout_marginBottom="16dp"/>
+        android:backgroundTint="#8E44AD"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp"
+        android:elevation="6dp" />
 
-    <!-- Auth_Register Button -->
+    <!-- Register Button -->
     <Button
         android:id="@+id/goToRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Register"
-        android:backgroundTint="#000000"
-        android:textColor="#ffffff"
-        android:layout_marginBottom="16dp"/>
+        android:backgroundTint="#8E44AD"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp"
+        android:elevation="6dp" />
 
     <!-- Google Sign-In Button -->
     <Button
@@ -53,7 +59,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Continue with Google"
-        android:backgroundTint="#000000"
-        android:textColor="#ffffff" />
+        android:backgroundTint="#8E44AD"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:padding="12dp"
+        android:elevation="6dp" />
 
 </LinearLayout>

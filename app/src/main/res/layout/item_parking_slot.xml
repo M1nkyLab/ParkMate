@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#1A1A1A"
+    android:padding="16dp"
+    android:layout_marginBottom="12dp"
+    android:clipToOutline="true">
+
+    <!-- Slot Name / ID -->
+    <TextView
+        android:id="@+id/textSlotName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Slot A01"
+        android:textSize="18sp"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold" />
+
+    <!-- Slot Status -->
+    <TextView
+        android:id="@+id/textSlotStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Available"
+        android:textSize="14sp"
+        android:textColor="#B0B0B0"
+        android:layout_marginTop="4dp" />
+
+    <!-- Delete Button -->
+    <Button
+        android:id="@+id/btnDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#E74C3C"
+        android:layout_marginTop="8dp" />
+</LinearLayout>

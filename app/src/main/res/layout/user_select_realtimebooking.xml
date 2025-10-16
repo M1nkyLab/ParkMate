@@ -2,30 +2,35 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
+    android:background="#000000"
     android:padding="16dp">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
 
+        <!-- Title -->
         <TextView
             android:text="Select Your Parking Slot"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:textColor="#000000"
-            android:layout_gravity="center"
+            android:textColor="#FFFFFF"
             android:layout_marginBottom="24dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
+        <!-- Grid for Slots -->
         <GridLayout
             android:id="@+id/gridSlots"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:columnCount="2"
             android:alignmentMode="alignMargins"
-            android:useDefaultMargins="true" />
+            android:useDefaultMargins="true"
+            android:layout_marginBottom="32dp" />
+
+
     </LinearLayout>
 </ScrollView>

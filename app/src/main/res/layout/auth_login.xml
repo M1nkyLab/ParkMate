@@ -3,6 +3,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="24dp"
+    android:background="#000000"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -22,7 +23,8 @@
         android:text="Log In"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:layout_marginBottom="24dp"/>
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="24dp" />
 
     <!-- Email -->
     <EditText
@@ -30,8 +32,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Email"
+        android:backgroundTint="#8E44AD"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#BBBBBB"
         android:inputType="textEmailAddress"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="16dp" />
 
     <!-- Password -->
     <EditText
@@ -39,26 +44,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Password"
+        android:backgroundTint="#8E44AD"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#BBBBBB"
         android:inputType="textPassword"
-        android:layout_marginBottom="24dp"/>
+        android:layout_marginBottom="24dp" />
 
-    <!-- Auth_Login Button -->
+    <!-- Login Button -->
     <Button
         android:id="@+id/loginButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Log In"
-        android:backgroundTint="#000000"
-        android:textColor="#ffffff"/>
+        android:backgroundTint="#8E44AD"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp"
+        android:layout_gravity="center"
+        android:elevation="6dp" />
 
-    <!-- Redirect to Auth_Register -->
+    <!-- Redirect to Register -->
     <TextView
         android:id="@+id/registerRedirect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Don’t have an account? Register"
-        android:textColor="#808080"
+        android:textColor="#BBBBBB"
+        android:textStyle="italic"
         android:layout_marginTop="16dp"
         android:clickable="true"
-        android:focusable="true"/>
+        android:focusable="true" />
 </LinearLayout>

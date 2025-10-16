@@ -5,8 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:padding="24dp" >
-
+    android:padding="24dp"
+    android:background="#000000">
 
     <!-- Introductory Text -->
     <TextView
@@ -15,10 +15,11 @@
         android:layout_marginBottom="24dp"
         android:text="Find your parking slot fast with ParkMate"
         android:textSize="24sp"
-        android:textColor="#333333"
-        android:textStyle="bold" />
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:gravity="center" />
 
-    <!-- Placeholder for an image or logo to improve visual appeal -->
+    <!-- App Icon -->
     <ImageView
         android:layout_width="200dp"
         android:layout_height="200dp"
@@ -27,21 +28,19 @@
         android:src="@mipmap/ic_launcher"
         android:contentDescription="ParkMate App Icon" />
 
-    <!-- "Get Started" Button for Navigation -->
+    <!-- "Get Started" Button -->
     <Button
         android:id="@+id/btnstart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="56dp"
         android:layout_marginTop="90dp"
-        android:backgroundTint="#000000"
+        android:backgroundTint="#8E44AD"
         android:text="GET STARTED"
         android:textSize="18sp"
         android:textColor="#FFFFFF"
         android:textStyle="bold"
         android:paddingVertical="12dp"
-        android:stateListAnimator="@null"
-        />
-
+        android:stateListAnimator="@null" />
 
 </LinearLayout>

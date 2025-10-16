@@ -1,7 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:gravity="center"
     android:padding="24dp"
+    android:background="#000000"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -21,7 +23,8 @@
         android:text="Create Account"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:layout_marginBottom="24dp"/>
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="24dp" />
 
     <!-- Email -->
     <EditText
@@ -30,7 +33,10 @@
         android:layout_height="wrap_content"
         android:hint="Email"
         android:inputType="textEmailAddress"
-        android:layout_marginBottom="16dp"/>
+        android:backgroundTint="#8E44AD"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#BBBBBB"
+        android:layout_marginBottom="16dp" />
 
     <!-- Username -->
     <EditText
@@ -39,7 +45,10 @@
         android:layout_height="wrap_content"
         android:hint="Username"
         android:inputType="textPersonName"
-        android:layout_marginBottom="16dp"/>
+        android:backgroundTint="#8E44AD"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#BBBBBB"
+        android:layout_marginBottom="16dp" />
 
     <!-- Plate Number -->
     <EditText
@@ -48,7 +57,10 @@
         android:layout_height="wrap_content"
         android:hint="Plate Number"
         android:inputType="textCapCharacters"
-        android:layout_marginBottom="16dp"/>
+        android:backgroundTint="#8E44AD"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#BBBBBB"
+        android:layout_marginBottom="16dp" />
 
     <!-- Password -->
     <EditText
@@ -57,7 +69,10 @@
         android:layout_height="wrap_content"
         android:hint="Password"
         android:inputType="textPassword"
-        android:layout_marginBottom="16dp"/>
+        android:backgroundTint="#8E44AD"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#BBBBBB"
+        android:layout_marginBottom="16dp" />
 
     <!-- Confirm Password -->
     <EditText
@@ -66,26 +81,32 @@
         android:layout_height="wrap_content"
         android:hint="Confirm Password"
         android:inputType="textPassword"
-        android:layout_marginBottom="24dp"/>
+        android:backgroundTint="#8E44AD"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#BBBBBB"
+        android:layout_marginBottom="24dp" />
 
-    <!-- Auth_Register Button -->
+    <!-- Register Button -->
     <Button
         android:id="@+id/registerButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Register"
-        android:backgroundTint="#000000"
+        android:backgroundTint="#8E44AD"
         android:textColor="#FFFFFF"
-        android:layout_marginBottom="16dp"/>
+        android:textStyle="bold"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp"
+        android:elevation="6dp" />
 
-    <!-- Redirect to Auth_Login -->
+    <!-- Redirect to Login -->
     <TextView
         android:id="@+id/loginRedirect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Already have an account? Log in"
-        android:textColor="#808080"
-        android:textStyle="bold"
+        android:textColor="#BBBBBB"
+        android:textStyle="italic"
         android:clickable="true"
-        android:focusable="true"/>
+        android:focusable="true" />
 </LinearLayout>

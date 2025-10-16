@@ -63,6 +63,7 @@ class Auth_Register : AppCompatActivity() {
                             // create a map with user details and a default "user" role
                             if (uid != null) {
                                 val userData = hashMapOf(
+                                    "email" to email,
                                     "username" to username,
                                     "plate" to plate,
                                     "role" to "user"

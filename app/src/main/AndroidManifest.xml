@@ -73,6 +73,15 @@
             android:name=".Admin.Admin_MainPage"
             android:exported="true" />
 
+        <activity
+            android:name=".Admin.Admin_Manage_ParkingSlot"
+            android:exported="true" />
+
+        <activity
+            android:name=".Admin.Admin_Add_NewSlot"
+            android:exported="true" />
+
+
 
     </application>
 

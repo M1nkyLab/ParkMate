@@ -1,78 +1,182 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="24dp"
-    android:background="#000000"
-    android:gravity="center_horizontal"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#121212"
+    android:fillViewport="true">
 
-    <TextView
-        android:text="Payment"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:layout_marginBottom="20dp"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <!-- Card Container -->
     <LinearLayout
-        android:orientation="vertical"
-        android:background="#1A1A1A"
-    android:padding="20dp"
-    android:layout_margin="10dp"
-    android:elevation="4dp"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:backgroundTintMode="src_in"
-    android:clipToOutline="true"
-    android:backgroundTint="#1A1A1A"
-    android:layout_gravity="center"
-    android:layout_marginBottom="20dp"
-    android:layout_marginTop="10dp"
-    android:clipChildren="true"
-    android:clipToPadding="false"
-    android:translationZ="4dp"
-    android:radius="12dp">
-
-    <TextView
-        android:text="Select Payment Method"
-        android:textSize="16sp"
-        android:textColor="#FFFFFF"
-        android:layout_marginBottom="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <RadioGroup
-        android:id="@+id/paymentOptions"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        tools:context=".User.User_Payment">
 
-        <RadioButton
-            android:id="@+id/option_card"
-            android:text="Credit/Debit Card"
-            android:textColor="#FFFFFF" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="24dp"
+            android:text="Confirm and Pay"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
-        <RadioButton
-            android:id="@+id/option_tng"
-            android:text="Touch 'n Go eWallet"
-            android:textColor="#FFFFFF" />
+        <!-- Booking Details Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:cardBackgroundColor="#1E1E1E"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp">
 
-        <RadioButton
-            android:id="@+id/option_fpx"
-            android:text="Online Banking (FPX)"
-            android:textColor="#FFFFFF" />
-    </RadioGroup>
-</LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
 
-    <Button
-    android:id="@+id/btnPayNow"
-    android:text="Pay Now"
-    android:textColor="#FFFFFF"
-    android:layout_marginTop="8dp"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="12dp"
-        android:backgroundTint="#8E44AD"/>
+                <TextView
+                    android:id="@+id/tvPaymentSlot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#E0E0E0"
+                    android:textSize="16sp"
+                    tools:text="Parking Slot: AA01" />
+
+                <TextView
+                    android:id="@+id/tvPaymentDuration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textColor="#E0E0E0"
+                    android:textSize="16sp"
+                    tools:text="Duration: 2 Hours" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Payment Method Selection -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:text="Select Payment Method"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <RadioGroup
+            android:id="@+id/paymentOptions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/radio_group_background"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/option_card"
+                style="@style/PaymentRadioButton"
+                android:text="Credit / Debit Card" />
+
+            <View style="@style/Divider" />
+
+            <RadioButton
+                android:id="@+id/option_tng"
+                style="@style/PaymentRadioButton"
+                android:text="Touch 'n Go eWallet" />
+
+            <View style="@style/Divider" />
+
+            <RadioButton
+                android:id="@+id/option_fpx"
+                style="@style/PaymentRadioButton"
+                android:text="Online Banking (FPX)" />
+        </RadioGroup>
+
+        <!-- Dynamic Payment Details Section -->
+        <FrameLayout
+            android:id="@+id/paymentDetailsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:animateLayoutChanges="true">
+
+            <!-- Card Details Layout (Initially Hidden) -->
+            <LinearLayout
+                android:id="@+id/cardDetailsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <EditText
+                    android:id="@+id/etCardNumber"
+                    style="@style/PaymentEditText"
+                    android:hint="Card Number"
+                    android:inputType="number" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/etExpiryDate"
+                        style="@style/PaymentEditText"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:hint="MM/YY"
+                        android:inputType="date" />
+
+                    <EditText
+                        android:id="@+id/etCvv"
+                        style="@style/PaymentEditText"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:hint="CVV"
+                        android:inputType="numberPassword" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- TNG/FPX Placeholder Layout (Initially Hidden) -->
+            <TextView
+                android:id="@+id/otherPaymentMethodLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/payment_info_background"
+                android:gravity="center"
+                android:padding="20dp"
+                android:text="You will be redirected to complete your payment."
+                android:textColor="#B0B0B0"
+                android:textSize="16sp"
+                android:visibility="gone"
+                tools:visibility="gone" />
+
+        </FrameLayout>
+
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Pay Button -->
+        <Button
+            android:id="@+id/btnPayNow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="#8E44AD"
+            android:padding="16dp"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:text="Pay" />
     </LinearLayout>
+
+</ScrollView>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#1A1A1A"
+    android:padding="16dp"
+    android:layout_marginBottom="10dp"
+    android:elevation="4dp">
+
+    <TextView
+        android:id="@+id/textBookingId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Booking ID: B001"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/textPlateNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Plate: ABC1234"
+        android:textColor="#CCCCCC"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp" />
+
+    <TextView
+        android:id="@+id/textSlot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Slot: A01"
+        android:textColor="#CCCCCC"
+        android:textSize="14sp"
+        android:layout_marginTop="2dp" />
+
+    <TextView
+        android:id="@+id/textTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="14:00 - 16:00 (2025-10-18)"
+        android:textColor="#AAAAAA"
+        android:textSize="13sp"
+        android:layout_marginTop="2dp" />
+
+    <TextView
+        android:id="@+id/textStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status: Completed"
+        android:textColor="#8E44AD"
+        android:textStyle="bold"
+        android:textSize="13sp"
+        android:layout_marginTop="4dp" />
+
+</LinearLayout>

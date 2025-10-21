@@ -49,6 +49,33 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
+        <!-- Time Selection -->
+        <TextView
+            android:text="Select start time:"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp"
+            android:textColor="#FFFFFF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/selectTimeBtn"
+            android:text="Choose Start Time"
+            android:layout_marginBottom="12dp"
+            android:backgroundTint="#8E44AD"
+            android:textColor="#FFFFFF"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/selectedTimeText"
+            android:text="No time selected"
+            android:textSize="16sp"
+            android:textColor="#AAAAAA"
+            android:layout_marginBottom="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
         <!-- Parking Slot Selection -->
         <TextView
             android:text="Available Parking Slot:"
@@ -80,6 +107,16 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:backgroundTint="#8E44AD" />
+
+        <!-- Estimated End Time -->
+        <TextView
+            android:id="@+id/estimatedEndTime"
+            android:text="Estimated End Time: -"
+            android:textSize="15sp"
+            android:textColor="#AAAAAA"
+            android:layout_marginBottom="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <!-- Price Display -->
         <TextView

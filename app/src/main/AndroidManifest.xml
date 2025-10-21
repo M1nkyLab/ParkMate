@@ -81,7 +81,17 @@
             android:name=".Admin.Admin_Add_NewSlot"
             android:exported="true" />
 
+        <activity
+            android:name=".Admin.Admin_ManageUser"
+            android:exported="true" />
 
+        <activity
+            android:name=".Admin.Admin_View_Report"
+            android:exported="true" />
+
+        <activity
+            android:name=".Admin.Admin_Manage_Bookings"
+            android:exported="true" />
 
     </application>
 

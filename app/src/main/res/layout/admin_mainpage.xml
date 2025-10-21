@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,6 +14,7 @@
             android:id="@+id/adminTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="23dp"
             android:text="Admin Dashboard"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -22,16 +22,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="24dp" />
 
-
-        <!-- Grid for Admin Options -->
-        <GridLayout
-            android:id="@+id/adminGrid"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:columnCount="2"
-            android:alignmentMode="alignMargins"
-            android:useDefaultMargins="true">
-
+        <!-- Cards (One by One) -->
         <!-- Manage Slots -->
         <LinearLayout
             android:id="@+id/btnManageSlots"
@@ -39,126 +30,123 @@
             android:gravity="center"
             android:background="#1A1A1A"
             android:padding="20dp"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:layout_columnWeight="1"
             android:elevation="8dp"
-            android:layout_margin="8dp"
-            android:backgroundTintMode="src_over"
+            android:layout_marginBottom="16dp"
             android:clipToOutline="true">
 
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:tint="#FFFFFF" />
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:tint="#FFFFFF" />
 
+            <Button
+                android:id="@+id/manageparking"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Parking"
+                android:backgroundTint="#8E44AD"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
+
+        <!-- View Bookings -->
+        <LinearLayout
+            android:id="@+id/btnViewBookings"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="#1A1A1A"
+            android:padding="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:elevation="8dp"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:tint="#FFFFFF" />
+
+            <Button
+                android:id="@+id/managebookings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Booking"
+                android:backgroundTint="#8E44AD"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
+
+        <!-- View Users -->
+        <LinearLayout
+            android:id="@+id/btnViewUsers"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="#1A1A1A"
+            android:padding="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:elevation="8dp"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:tint="#FFFFFF" />
+
+            <Button
+                android:id="@+id/manageusers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Manage Users"
+                android:backgroundTint="#8E44AD"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
+
+        <!-- Reports -->
+        <LinearLayout
+            android:id="@+id/btnReports"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="#1A1A1A"
+            android:padding="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:elevation="8dp"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:tint="#FFFFFF" />
+
+            <Button
+                android:id="@+id/viewreport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Reports"
+                android:backgroundTint="#8E44AD"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
+
+        <!-- Scan QR Button -->
         <Button
-            android:id="@+id/manageparking"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="View Parking"
+            android:text="Scan QR"
+            android:layout_marginTop="32dp"
             android:backgroundTint="#8E44AD"
             android:textColor="#FFFFFF" />
-    </LinearLayout>
 
-    <!-- View Bookings -->
-    <LinearLayout
-        android:id="@+id/btnViewBookings"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:background="#1A1A1A"
-        android:padding="20dp"
-        android:layout_width="0dp"
-        android:layout_height="150dp"
-        android:layout_columnWeight="1"
-        android:elevation="8dp"
-        android:layout_margin="8dp">
-
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:tint="#FFFFFF" />
-
+        <!-- Logout Button -->
         <Button
+            android:id="@+id/logoutButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="View Booking"
+            android:layout_marginTop="24dp"
+            android:text="Log Out"
             android:backgroundTint="#8E44AD"
             android:textColor="#FFFFFF" />
-    </LinearLayout>
-
-    <!-- View Users -->
-    <LinearLayout
-        android:id="@+id/btnViewUsers"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:background="#1A1A1A"
-        android:padding="20dp"
-        android:layout_width="0dp"
-        android:layout_height="150dp"
-        android:layout_columnWeight="1"
-        android:elevation="8dp"
-        android:layout_margin="8dp">
-
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:tint="#FFFFFF" />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Manage Users"
-            android:backgroundTint="#8E44AD"
-            android:textColor="#FFFFFF" />
-    </LinearLayout>
-
-    <!-- Reports -->
-    <LinearLayout
-        android:id="@+id/btnReports"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:background="#1A1A1A"
-        android:padding="20dp"
-        android:layout_width="0dp"
-        android:layout_height="150dp"
-        android:layout_columnWeight="1"
-        android:elevation="8dp"
-        android:layout_margin="8dp">
-
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:tint="#FFFFFF" />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="View Reports"
-            android:backgroundTint="#8E44AD"
-            android:textColor="#FFFFFF" />
-    </LinearLayout>
-</GridLayout>
-
-    <!-- Scan QR Button -->
-<Button
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:text="Scan QR"
-android:layout_marginTop="32dp"
-android:backgroundTint="#8E44AD"
-android:textColor="#FFFFFF" />
-
-    <!-- Logout Button -->
-<Button
-android:id="@+id/logoutButton"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:layout_marginTop="24dp"
-android:text="Log Out"
-android:backgroundTint="#8E44AD"
-android:textColor="#FFFFFF" />
 
     </LinearLayout>
 
-    </ScrollView>
+</ScrollView>

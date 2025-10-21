@@ -16,7 +16,7 @@
 
     <TextView
         android:id="@+id/summarySlot"
-        android:text="Slot: A1"
+        android:text="Slot: "
         android:textSize="16sp"
         android:textColor="#FFFFFF"
         android:layout_marginBottom="8dp"

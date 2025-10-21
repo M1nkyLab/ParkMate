@@ -5,16 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.RadioGroup
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.parkmate.R
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -29,20 +25,22 @@ class User_Payment : AppCompatActivity() {
     private lateinit var etCardNumber: EditText
     private lateinit var etExpiryDate: EditText
     private lateinit var etCvv: EditText
+    private lateinit var db: FirebaseFirestore
+    private lateinit var auth: FirebaseAuth
 
     private var price: Double = 0.0
+    private var slotName: String = ""
+    private var selectedTime: String = ""
+    private var numberPlate: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.user_payment)
 
-        // Initialize views
         initializeViews()
-
-        // Get data from BookingSummary and display it
+        db = FirebaseFirestore.getInstance()
+        auth = FirebaseAuth.getInstance()
         getIntentData()
-
-        // Set up listeners
         setupListeners()
     }
 
@@ -59,15 +57,14 @@ class User_Payment : AppCompatActivity() {
     }
 
     private fun getIntentData() {
-        val slotName = intent.getStringExtra("slotName") ?: "N/A"
-        val selectedTime = intent.getStringExtra("selectedTime") ?: "N/A"
+        slotName = intent.getStringExtra("slotName") ?: "N/A"
+        selectedTime = intent.getStringExtra("selectedTime") ?: "N/A"
+        numberPlate = intent.getStringExtra("numberPlate") ?: "N/A"
         price = intent.getDoubleExtra("price", 0.0)
 
-        // Format currency
         val format = NumberFormat.getCurrencyInstance(Locale("ms", "MY"))
         val formattedPrice = format.format(price)
 
-        // Set text
         tvPaymentSlot.text = "Parking Slot: $slotName"
         tvPaymentDuration.text = "Duration: $selectedTime"
         btnPayNow.text = "Pay $formattedPrice"
@@ -77,12 +74,12 @@ class User_Payment : AppCompatActivity() {
         paymentOptions.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.option_card -> {
-                    cardDetailsLayout.visibility = View.VISIBLE
-                    otherPaymentMethodLayout.visibility = View.GONE
+                    cardDetailsLayout.visibility = android.view.View.VISIBLE
+                    otherPaymentMethodLayout.visibility = android.view.View.GONE
                 }
                 R.id.option_tng, R.id.option_fpx -> {
-                    cardDetailsLayout.visibility = View.GONE
-                    otherPaymentMethodLayout.visibility = View.VISIBLE
+                    cardDetailsLayout.visibility = android.view.View.GONE
+                    otherPaymentMethodLayout.visibility = android.view.View.VISIBLE
                 }
             }
         }
@@ -99,13 +96,10 @@ class User_Payment : AppCompatActivity() {
             return
         }
 
-        if (selectedOption == R.id.option_card) {
-            if (!isCardInfoValid()) {
-                return // Exit if validation fails
-            }
+        if (selectedOption == R.id.option_card && !isCardInfoValid()) {
+            return
         }
 
-        // All good, simulate payment process
         simulatePaymentProcess()
     }
 
@@ -114,43 +108,74 @@ class User_Payment : AppCompatActivity() {
             etCardNumber.error = "Enter a valid 16-digit card number"
             return false
         }
-        if (etExpiryDate.text.length < 5) { // MM/YY format
-            etExpiryDate.error = "Enter a valid expiry date (MM/YY)"
+        if (etExpiryDate.text.length < 5) {
+            etExpiryDate.error = "Enter expiry date (MM/YY)"
             return false
         }
         if (etCvv.text.length < 3) {
-            etCvv.error = "Enter a valid 3-digit CVV"
+            etCvv.error = "Enter 3-digit CVV"
             return false
         }
         return true
     }
 
     private fun simulatePaymentProcess() {
-        // Show a "Processing..." dialog
         val progressDialog = ProgressDialog(this).apply {
             setMessage("Processing Payment...")
             setCancelable(false)
             show()
         }
 
-        // Simulate a network delay of 2 seconds
         Handler(Looper.getMainLooper()).postDelayed({
             progressDialog.dismiss()
-            showSuccessDialog()
+            saveBookingToFirestore()
         }, 2000)
+    }
+
+    private fun saveBookingToFirestore() {
+        val userId = auth.currentUser?.uid ?: "UnknownUser"
+
+        val bookingData = hashMapOf(
+            "userId" to userId,
+            "slotName" to slotName,
+            "duration" to selectedTime,
+            "numberPlate" to numberPlate,
+            "price" to price,
+            "status" to "Booked",
+            "timestamp" to System.currentTimeMillis()
+        )
+
+        // Save booking in Firestore
+        db.collection("bookings")
+            .add(bookingData)
+            .addOnSuccessListener {
+                // Update slot status in parking_slots
+                db.collection("parking_slots").document(slotName)
+                    .update("status", "Booked")
+                    .addOnSuccessListener {
+                        showSuccessDialog()
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(this, "Failed to update slot: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Failed to save booking: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun showSuccessDialog() {
         AlertDialog.Builder(this)
             .setTitle("Payment Successful")
-            .setMessage("Your parking slot has been booked. A receipt has been sent to your email.")
+            .setMessage("Your booking has been saved to the system.")
             .setPositiveButton("OK") { dialog, _ ->
                 dialog.dismiss()
-                // TODO: Navigate to a receipt/home page
                 val intent = Intent(this, User_CompletePayment::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                intent.putExtra("slotName", slotName)
+                intent.putExtra("selectedTime", selectedTime)
+                intent.putExtra("price", price)
                 startActivity(intent)
-                finish() // For now, just close the payment activity
+                finish()
             }
             .setCancelable(false)
             .show()

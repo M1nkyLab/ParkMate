@@ -8,46 +8,68 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import com.example.parkmate.R
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class User_SelectSlot_RealtimeBooking : AppCompatActivity() {
 
     private lateinit var gridSlots: GridLayout
+    private lateinit var plateSpinner: Spinner
     private val db = FirebaseFirestore.getInstance()
+    private val auth = FirebaseAuth.getInstance()
+
+    private val plateList = mutableListOf<String>()
+    private lateinit var plateAdapter: ArrayAdapter<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.user_select_realtimebooking)
 
+        plateSpinner = findViewById(R.id.plateSpinner)
         gridSlots = findViewById(R.id.gridSlots)
 
+        // Plate spinner adapter
+        plateAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, plateList)
+        plateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        plateSpinner.adapter = plateAdapter
+
+        loadUserPlates()
         fetchParkingSlots()
     }
 
-    /**
-     * THIS IS THE UPDATED FUNCTION
-     */
+    private fun loadUserPlates() {
+        val userId = auth.currentUser?.uid ?: return
+
+        db.collection("users").document(userId).collection("vehicles")
+            .get()
+            .addOnSuccessListener { documents ->
+                plateList.clear()
+                for (doc in documents) {
+                    val plate = doc.getString("numberPlate")
+                    if (!plate.isNullOrEmpty()) plateList.add(plate)
+                }
+                if (plateList.isEmpty()) plateList.add("No vehicles found")
+                plateAdapter.notifyDataSetChanged()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Failed to load plates: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
     private fun fetchParkingSlots() {
         db.collection("parking_slots")
             .get()
             .addOnSuccessListener { result ->
+                gridSlots.removeAllViews()
                 if (result.isEmpty) {
                     Toast.makeText(this, "No parking slots found.", Toast.LENGTH_SHORT).show()
                     return@addOnSuccessListener
                 }
                 for (document in result) {
-                    // 1. Read "slotId" instead of "name"
-                    val slotId = document.getString("slotId") ?: document.id // Use document.id as fallback
-
-                    // 2. Read "status" (String) and convert to a Boolean
+                    val slotId = document.getString("slotId") ?: document.id
                     val statusString = document.getString("status") ?: "Occupied"
                     val isAvailable = (statusString == "Available")
-
-                    // 3. Read "baseRate". If it's missing in Firestore, it will use 3.0
-                    // (I recommend you add a 'baseRate: 3.0' field to your documents)
                     val baseRate = document.getDouble("baseRate") ?: 3.0
-
-                    // This function call now receives the correct data
                     addSlotCard(slotId, isAvailable, baseRate)
                 }
             }
@@ -109,17 +131,11 @@ class User_SelectSlot_RealtimeBooking : AppCompatActivity() {
         }
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: android.view.View?,
-                position: Int,
-                id: Long
-            ) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: android.view.View?, position: Int, id: Long) {
                 val hours = position + 1
                 val price = baseRate * hours
                 priceView.text = "Price: RM${String.format("%.2f", price)}"
             }
-
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
@@ -132,12 +148,19 @@ class User_SelectSlot_RealtimeBooking : AppCompatActivity() {
             setPadding(8, 8, 8, 8)
 
             setOnClickListener {
+                val selectedPlate = plateSpinner.selectedItem.toString()
+                if (selectedPlate == "No vehicles found") {
+                    Toast.makeText(this@User_SelectSlot_RealtimeBooking, "Please add a vehicle first", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
                 val selectedTime = spinner.selectedItem.toString()
                 val hours = spinner.selectedItemPosition + 1
                 val totalPrice = baseRate * hours
 
                 val intent = Intent(this@User_SelectSlot_RealtimeBooking, User_BookingSummary::class.java)
                 intent.putExtra("slotName", slotName)
+                intent.putExtra("selectedPlate", selectedPlate)
                 intent.putExtra("selectedTime", selectedTime)
                 intent.putExtra("price", totalPrice)
                 startActivity(intent)

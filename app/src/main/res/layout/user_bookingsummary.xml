@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Title -->
     <TextView
         android:text="Booking Summary"
         android:textSize="20sp"
@@ -14,6 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <!-- Slot -->
     <TextView
         android:id="@+id/summarySlot"
         android:text="Slot: "
@@ -23,24 +25,37 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <!-- Vehicle Plate -->
+    <TextView
+        android:id="@+id/summaryPlate"
+        android:text="Plate: "
+        android:textSize="16sp"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <!-- Duration / Time -->
     <TextView
         android:id="@+id/summaryTime"
-        android:text="Time: 10:00 AM - 12:00 PM"
+        android:text="Duration: "
         android:textSize="16sp"
-        android:layout_marginBottom="8dp"
         android:textColor="#FFFFFF"
+        android:layout_marginBottom="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <!-- Total Price -->
     <TextView
         android:id="@+id/summaryPrice"
-        android:text="Total: RM 5.00"
+        android:text="Total: RM 0.00"
         android:textSize="16sp"
-        android:layout_marginBottom="24dp"
         android:textColor="#FFFFFF"
+        android:layout_marginBottom="24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <!-- Proceed to Payment Button -->
     <Button
         android:id="@+id/btnProceedPayment"
         android:text="Proceed to Payment"

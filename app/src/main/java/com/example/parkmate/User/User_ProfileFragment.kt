@@ -54,7 +54,7 @@ class User_ProfileFragment : Fragment() {
 
         // 🔹 Add New Vehicle button click
         addVehicleButton.setOnClickListener {
-            val intent = Intent(requireContext(), User_VehicleActivity::class.java)
+            val intent = Intent(requireContext(), User_Show_Vehicle::class.java)
             startActivity(intent)
         }
 

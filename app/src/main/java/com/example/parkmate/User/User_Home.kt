@@ -54,7 +54,7 @@ class User_AddNewVehicle : AppCompatActivity() {
         setContentView(R.layout.user_addnewvehicle) // your layout
 
         // Navigate to activity vehicle when button is clicked
-        val button = findViewById<Button>(R.id.saveVehicleButton)
+        val button = findViewById<Button>(R.id.saveButton)
         button.setOnClickListener {
             val intent = Intent(this, User_VehicleActivity::class.java)
             startActivity(intent)
@@ -67,7 +67,7 @@ class User_VehicleActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.user_showvehicle)
+        setContentView(R.layout.user_view_vehicles)
 
         // Navigate to AddNewVehicleActivity when button is clicked
         val button = findViewById<Button>(R.id.addVehicleButton)

@@ -1,113 +1,216 @@
 package com.example.parkmate.User
 
 import android.app.DatePickerDialog
-import android.content.Intent
+import android.app.TimePickerDialog
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.parkmate.R
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.*
 
 class User_AdvanceBooking : AppCompatActivity() {
 
-    private lateinit var selectDateBtn: Button
-    private lateinit var selectedDateText: TextView
+    private lateinit var plateSpinner: Spinner
     private lateinit var slotSpinner: Spinner
     private lateinit var hourSpinner: Spinner
-    private lateinit var confirmBookingBtn: Button
+    private lateinit var selectDateBtn: Button
+    private lateinit var selectTimeBtn: Button
+    private lateinit var selectedDateText: TextView
+    private lateinit var selectedTimeText: TextView
+    private lateinit var estimatedEndTime: TextView
     private lateinit var priceText: TextView
-    private lateinit var inputPlate: EditText
+    private lateinit var confirmBookingBtn: Button
 
-    private var selectedDate: String = ""
-    private var selectedSlot: String = ""
-    private var selectedDuration: Int = 0
-    private var totalPrice: Double = 0.0
+    private val db = FirebaseFirestore.getInstance()
+    private val auth = FirebaseAuth.getInstance()
 
-    private val pricePerHour = 2.5 // RM2.50/hour (example rate)
+    private val plateList = mutableListOf<String>()
+    private val slotList = mutableListOf<String>()
+    private val hourList = (1..12).map { it.toString() } // example 1-12 hours
+
+    private lateinit var plateAdapter: ArrayAdapter<String>
+    private lateinit var slotAdapter: ArrayAdapter<String>
+    private lateinit var hourAdapter: ArrayAdapter<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.user_advancebooking)
 
-        // Initialize UI elements
-        selectDateBtn = findViewById(R.id.selectDateBtn)
-        selectedDateText = findViewById(R.id.selectedDateText)
+        // Initialize views
+        plateSpinner = findViewById(R.id.plateSpinner)
         slotSpinner = findViewById(R.id.slotSpinner)
         hourSpinner = findViewById(R.id.hourSpinner)
-        confirmBookingBtn = findViewById(R.id.confirmBookingBtn)
+        selectDateBtn = findViewById(R.id.selectDateBtn)
+        selectTimeBtn = findViewById(R.id.selectTimeBtn)
+        selectedDateText = findViewById(R.id.selectedDateText)
+        selectedTimeText = findViewById(R.id.selectedTimeText)
+        estimatedEndTime = findViewById(R.id.estimatedEndTime)
         priceText = findViewById(R.id.priceText)
-        
+        confirmBookingBtn = findViewById(R.id.confirmBookingBtn)
 
-        // 1️⃣ Date Picker
-        val calendar = Calendar.getInstance()
-        selectDateBtn.setOnClickListener {
-            val datePicker = DatePickerDialog(
-                this,
-                { _, year, month, dayOfMonth ->
-                    val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                    calendar.set(year, month, dayOfMonth)
-                    selectedDate = sdf.format(calendar.time)
-                    selectedDateText.text = selectedDate
-                },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-            )
-            datePicker.show()
-        }
+        // Set up adapters
+        plateAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, plateList)
+        plateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        plateSpinner.adapter = plateAdapter
 
-        // 2️⃣ Slot Spinner (example slots)
-        val slots = listOf("A01", "A02", "A03", "A04", "A05")
-        val slotAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, slots)
+        slotAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, slotList)
         slotAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         slotSpinner.adapter = slotAdapter
-        slotSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: android.view.View?, position: Int, id: Long) {
-                selectedSlot = slots[position]
-            }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
-
-        // 3️⃣ Duration Spinner (hours)
-        val hours = listOf(1, 2, 3, 4, 5)
-        val hourAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, hours)
+        hourAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, hourList)
         hourAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         hourSpinner.adapter = hourAdapter
+
+        // Load data from Firebase
+        loadUserPlates()
+        loadParkingSlots()
+
+        // Pick date
+        selectDateBtn.setOnClickListener { pickDate() }
+
+        // Pick time
+        selectTimeBtn.setOnClickListener { pickTime() }
+
+        // Update estimated end time when hours change
         hourSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: android.view.View?, position: Int, id: Long) {
-                selectedDuration = hours[position]
+            override fun onItemSelected(parent: AdapterView<*>, view: android.view.View?, position: Int, id: Long) {
+                calculateEndTime()
                 calculatePrice()
             }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+            override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
-        // 4️⃣ Confirm Booking Button -> Go to Summary Page
-        confirmBookingBtn.setOnClickListener {
-            val plateNumber = inputPlate.text.toString().trim()
+        // Confirm booking
+        confirmBookingBtn.setOnClickListener { saveBooking() }
+    }
 
-            if (selectedDate.isEmpty() || plateNumber.isEmpty()) {
-                Toast.makeText(this, "Please select a date and enter plate number", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+    private fun loadUserPlates() {
+        val userId = auth.currentUser?.uid ?: return
+
+        db.collection("users").document(userId)
+            .collection("vehicles")
+            .get()
+            .addOnSuccessListener { documents ->
+                plateList.clear()
+                for (doc in documents) {
+                    val plate = doc.getString("numberPlate")
+                    if (!plate.isNullOrEmpty()) plateList.add(plate)
+                }
+                if (plateList.isEmpty()) plateList.add("No vehicles found")
+                plateAdapter.notifyDataSetChanged()
             }
-
-            // Pass the temporary booking data to Booking Summary Page
-            val intent = Intent(this, User_BookingSummary::class.java).apply {
-                putExtra("slotName", selectedSlot)
-                putExtra("dateOfBooking", selectedDate)
-                putExtra("duration", selectedDuration)
-                putExtra("price", totalPrice)
-                putExtra("plateNumber", plateNumber)
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Error loading plates: ${e.message}", Toast.LENGTH_SHORT).show()
             }
+    }
 
-            startActivity(intent)
+    private fun loadParkingSlots() {
+        db.collection("parking_slots")
+            .get()
+            .addOnSuccessListener { documents ->
+                slotList.clear()
+                for (doc in documents) {
+                    val slotName = doc.getString("name") ?: doc.id
+                    slotList.add(slotName)
+                }
+                if (slotList.isEmpty()) slotList.add("No slots available")
+                slotAdapter.notifyDataSetChanged()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Error loading slots: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun pickDate() {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        DatePickerDialog(this, { _, y, m, d ->
+            selectedDateText.text = "${d}/${m + 1}/$y"
+            calculateEndTime()
+        }, year, month, day).show()
+    }
+
+    private fun pickTime() {
+        val calendar = Calendar.getInstance()
+        val hour = calendar.get(Calendar.HOUR_OF_DAY)
+        val minute = calendar.get(Calendar.MINUTE)
+
+        TimePickerDialog(this, { _, h, m ->
+            val mFormatted = if (m < 10) "0$m" else "$m"
+            selectedTimeText.text = "$h:$mFormatted"
+            calculateEndTime()
+        }, hour, minute, true).show()
+    }
+
+    private fun calculateEndTime() {
+        val startTimeStr = selectedTimeText.text.toString()
+        val durationStr = hourSpinner.selectedItem.toString()
+
+        if (startTimeStr == "No time selected" || durationStr.isEmpty()) {
+            estimatedEndTime.text = "Estimated End Time: -"
+            return
+        }
+
+        try {
+            val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
+            val startDate = sdf.parse(startTimeStr) ?: return
+            val calendar = Calendar.getInstance()
+            calendar.time = startDate
+            calendar.add(Calendar.HOUR_OF_DAY, durationStr.toInt())
+
+            estimatedEndTime.text = "Estimated End Time: ${sdf.format(calendar.time)}"
+        } catch (e: Exception) {
+            estimatedEndTime.text = "Estimated End Time: -"
         }
     }
 
     private fun calculatePrice() {
-        totalPrice = selectedDuration * pricePerHour
+        val duration = hourSpinner.selectedItem.toString().toIntOrNull() ?: 0
+        val ratePerHour = 5.0 // example RM 5 per hour
+        val totalPrice = duration * ratePerHour
         priceText.text = "Total Price: RM %.2f".format(totalPrice)
+    }
+
+    private fun saveBooking() {
+        val userId = auth.currentUser?.uid ?: return
+        val plate = plateSpinner.selectedItem.toString()
+        val slot = slotSpinner.selectedItem.toString()
+        val date = selectedDateText.text.toString()
+        val time = selectedTimeText.text.toString()
+        val duration = hourSpinner.selectedItem.toString().toIntOrNull() ?: 0
+        val totalPrice = duration * 5.0
+
+        if (date == "No date selected" || time == "No time selected") {
+            Toast.makeText(this, "Please select date and time", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val bookingData = hashMapOf(
+            "plate" to plate,
+            "slot" to slot,
+            "date" to date,
+            "startTime" to time,
+            "durationHours" to duration,
+            "endTime" to estimatedEndTime.text.toString().replace("Estimated End Time: ", ""),
+            "totalPrice" to totalPrice,
+            "createdAt" to System.currentTimeMillis()
+        )
+
+        db.collection("users").document(userId)
+            .collection("bookings")
+            .add(bookingData)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Booking Confirmed!", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Error saving booking: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 }

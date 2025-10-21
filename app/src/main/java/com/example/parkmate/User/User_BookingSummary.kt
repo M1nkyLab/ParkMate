@@ -3,11 +3,12 @@ package com.example.parkmate.User
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import android.widget.TextView // <-- Import TextView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.parkmate.R
-import java.text.NumberFormat // <-- Import for currency formatting
-import java.util.Locale // <-- Import for currency formatting
+import java.text.NumberFormat
+import java.util.Locale
 
 class User_BookingSummary : AppCompatActivity() {
 
@@ -15,41 +16,41 @@ class User_BookingSummary : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.user_bookingsummary)
 
-        // --- 1. Get data from the previous activity (User_SelectSlot_RealtimeBooking) ---
-        val slotName = intent.getStringExtra("slotName")
-        val selectedTime = intent.getStringExtra("selectedTime")
-        val price = intent.getDoubleExtra("price", 0.0) // 0.0 is a default value if not found
+        // --- 1. Get data from the previous activity ---
+        val slotName = intent.getStringExtra("slotName") ?: "Unknown Slot"
+        val selectedPlate = intent.getStringExtra("selectedPlate") ?: "No Vehicle Selected"
+        val selectedTime = intent.getStringExtra("selectedTime") ?: "No Duration Selected"
+        val price = intent.getDoubleExtra("price", 0.0)
 
-        // --- 2. Find your TextViews from your XML layout ---
-        // !! IMPORTANT: You MUST change these R.id names to match your user_bookingsummary.xml file !!
-        val tvSlotName = findViewById<TextView>(R.id.summarySlot) // <--- GUESSING THIS ID
-        val tvSelectedTime = findViewById<TextView>(R.id.summaryTime) // <--- GUESSING THIS ID
-        val tvTotalPrice = findViewById<TextView>(R.id.summaryPrice) // <--- GUESSING THIS ID
+        // --- 2. Find TextViews from XML layout ---
+        val tvSlotName = findViewById<TextView>(R.id.summarySlot)
+        val tvSelectedPlate = findViewById<TextView>(R.id.summaryPlate)
+        val tvSelectedTime = findViewById<TextView>(R.id.summaryTime)
+        val tvTotalPrice = findViewById<TextView>(R.id.summaryPrice)
 
-
-        // --- 3. Display the data in the TextViews ---
-
-        // This formats the price double (e.g., 6.0) into a currency string (e.g., "RM 6.00")
+        // --- 3. Format price ---
         val format = NumberFormat.getCurrencyInstance(Locale("ms", "MY"))
         val formattedPrice = format.format(price)
 
+        // --- 4. Display data ---
         tvSlotName.text = "Slot: $slotName"
+        tvSelectedPlate.text = "Plate: $selectedPlate"
         tvSelectedTime.text = "Duration: $selectedTime"
         tvTotalPrice.text = "Total: $formattedPrice"
 
-
-        // --- 4. Find the button and prepare to pass data to the NEXT activity ---
+        // --- 5. Proceed to payment ---
         val btnProceedPayment = findViewById<Button>(R.id.btnProceedPayment)
-
         btnProceedPayment.setOnClickListener {
-            // Navigate to Payment Page
+            if (selectedPlate == "No Vehicle Selected") {
+                Toast.makeText(this, "Please select a vehicle first!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             val paymentIntent = Intent(this, User_Payment::class.java)
-
-            // Pass the details along to the User_Payment activity
             paymentIntent.putExtra("slotName", slotName)
+            paymentIntent.putExtra("selectedPlate", selectedPlate)
             paymentIntent.putExtra("selectedTime", selectedTime)
-            paymentIntent.putExtra("price", price) // Pass the original double value
-
+            paymentIntent.putExtra("price", price)
             startActivity(paymentIntent)
         }
     }

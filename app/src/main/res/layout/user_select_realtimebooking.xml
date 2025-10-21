@@ -17,11 +17,27 @@
             android:textSize="22sp"
             android:textStyle="bold"
             android:textColor="#FFFFFF"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <!-- Grid for Slots -->
+        <!-- Vehicle Spinner -->
+        <TextView
+            android:text="Select Your Vehicle"
+            android:textSize="16sp"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Spinner
+            android:id="@+id/plateSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="#8E44AD" />
+
+        <!-- Grid for Parking Slots -->
         <GridLayout
             android:id="@+id/gridSlots"
             android:layout_width="match_parent"
@@ -30,7 +46,5 @@
             android:alignmentMode="alignMargins"
             android:useDefaultMargins="true"
             android:layout_marginBottom="32dp" />
-
-
     </LinearLayout>
 </ScrollView>

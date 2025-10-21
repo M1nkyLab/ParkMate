@@ -1,63 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="24dp"
-    android:background="#000000"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:padding="24dp">
 
-    <!-- Tick Logo ImageView -->
-    <ImageView
-        android:id="@+id/tickLogo"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/tick_logo"
-        android:layout_marginBottom="16dp" />
-
-    <TextView
-        android:text="Booking Complete!"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:layout_marginBottom="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/slotInfo"
-        android:text="Your Slot: A1"
-        android:textSize="18sp"
-        android:textColor="#FFFFFF"
-        android:layout_marginBottom="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <ImageView
-        android:id="@+id/qrCode"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginBottom="20dp" />
-
-    <TextView
-        android:text="Scan this QR at the gate to enter"
-        android:textSize="14sp"
-        android:textColor="#CCCCCC"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/backToHomeBtn"
+    <LinearLayout
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Confirm"
-        android:textSize="16sp"
-        android:backgroundTint="#8E44AD"
-        android:textColor="#FFFFFF"
-        android:padding="12dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="8dp"
-        android:layout_gravity="center"
-        android:layout_marginHorizontal="16dp" />
+        android:layout_height="wrap_content">
 
-</LinearLayout>
+        <!-- Tick Logo -->
+        <ImageView
+            android:id="@+id/tickLogo"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/tick_logo"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Title -->
+        <TextView
+            android:text="Booking Complete!"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <!-- Slot Info -->
+        <TextView
+            android:id="@+id/slotInfo"
+            android:text="Your Slot: "
+            android:textSize="18sp"
+            android:textColor="#FFFFFF"
+            android:gravity="center"
+            android:layout_marginBottom="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <!-- Error / Status Message -->
+        <TextView
+            android:id="@+id/statusMessage"
+            android:text=""
+            android:textSize="14sp"
+            android:textColor="#FF7777"
+            android:gravity="center"
+            android:layout_marginBottom="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <!-- QR Code -->
+        <ImageView
+            android:id="@+id/qrCode"
+            android:layout_width="220dp"
+            android:layout_height="220dp"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Instruction -->
+        <TextView
+            android:text="Scan this QR at the gate to enter"
+            android:textSize="15sp"
+            android:textColor="#CCCCCC"
+            android:gravity="center"
+            android:layout_marginBottom="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <!-- Confirm Button -->
+        <Button
+            android:id="@+id/backToHomeBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Confirm"
+            android:textSize="16sp"
+            android:backgroundTint="#8E44AD"
+            android:textColor="#FFFFFF"
+            android:padding="14dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginBottom="16dp"
+            android:layout_gravity="center" />
+
+    </LinearLayout>
+</ScrollView>

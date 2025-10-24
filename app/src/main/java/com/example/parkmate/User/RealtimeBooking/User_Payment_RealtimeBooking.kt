@@ -1,10 +1,11 @@
-package com.example.parkmate.User
+package com.example.parkmate.User.RealtimeBooking
 
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -14,7 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import java.text.NumberFormat
 import java.util.Locale
 
-class User_Payment : AppCompatActivity() {
+class User_Payment_RealtimeBooking : AppCompatActivity() {
 
     private lateinit var tvPaymentSlot: TextView
     private lateinit var tvPaymentDuration: TextView
@@ -74,12 +75,12 @@ class User_Payment : AppCompatActivity() {
         paymentOptions.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.option_card -> {
-                    cardDetailsLayout.visibility = android.view.View.VISIBLE
-                    otherPaymentMethodLayout.visibility = android.view.View.GONE
+                    cardDetailsLayout.visibility = View.VISIBLE
+                    otherPaymentMethodLayout.visibility = View.GONE
                 }
                 R.id.option_tng, R.id.option_fpx -> {
-                    cardDetailsLayout.visibility = android.view.View.GONE
-                    otherPaymentMethodLayout.visibility = android.view.View.VISIBLE
+                    cardDetailsLayout.visibility = View.GONE
+                    otherPaymentMethodLayout.visibility = View.VISIBLE
                 }
             }
         }
@@ -170,7 +171,7 @@ class User_Payment : AppCompatActivity() {
             .setMessage("Your booking has been saved to the system.")
             .setPositiveButton("OK") { dialog, _ ->
                 dialog.dismiss()
-                val intent = Intent(this, User_CompletePayment::class.java)
+                val intent = Intent(this, User_CompletePayment_RealtimeBooking::class.java)
                 intent.putExtra("slotName", slotName)
                 intent.putExtra("selectedTime", selectedTime)
                 intent.putExtra("price", price)

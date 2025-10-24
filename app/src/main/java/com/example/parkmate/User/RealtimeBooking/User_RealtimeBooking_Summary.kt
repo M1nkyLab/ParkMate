@@ -1,4 +1,4 @@
-package com.example.parkmate.User
+package com.example.parkmate.User.RealtimeBooking
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,11 +10,11 @@ import com.example.parkmate.R
 import java.text.NumberFormat
 import java.util.Locale
 
-class User_BookingSummary : AppCompatActivity() {
+class User_RealtimeBooking_Summary : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.user_bookingsummary)
+        setContentView(R.layout.user_realtimebooking_summary)
 
         // --- 1. Get data from the previous activity ---
         val slotName = intent.getStringExtra("slotName") ?: "Unknown Slot"
@@ -46,7 +46,7 @@ class User_BookingSummary : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val paymentIntent = Intent(this, User_Payment::class.java)
+            val paymentIntent = Intent(this, User_Payment_RealtimeBooking::class.java)
             paymentIntent.putExtra("slotName", slotName)
             paymentIntent.putExtra("selectedPlate", selectedPlate)
             paymentIntent.putExtra("selectedTime", selectedTime)

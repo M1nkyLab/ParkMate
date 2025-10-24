@@ -2,8 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- permission untuk internet  -->
+    <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -14,91 +15,89 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ParkMate">
+
+        <!-- Launcher activity -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!-- First page -->
-        <activity
-            android:name=".Auth.Auth_LoginRegister"
+        <!-- Auth activities -->
+        <activity android:name=".Auth.Auth_LoginRegister"
             android:exported="true" />
 
-        <activity
-            android:name=".Auth.Auth_Register"
+        <activity android:name=".Auth.Auth_Register"
             android:exported="true" />
 
-        <activity
-            android:name=".Auth.Auth_Login"
+        <activity android:name=".Auth.Auth_Login"
             android:exported="true" />
 
-        <activity
-            android:name=".User.User_Home"
+
+        <!-- User activities -->
+        <activity android:name=".User.User_Home"
             android:exported="true" />
 
-        <activity
-            android:name=".User.User_VehicleActivity"
+        <activity android:name=".User.User_VehicleActivity"
             android:exported="true" />
 
-        <activity
-            android:name=".User.User_AddNewVehicle"
+        <activity android:name=".User.User_AddNewVehicle"
             android:exported="true" />
 
-        <activity
-            android:name=".User.User_AdvanceBooking"
+        <activity android:name=".User.User_AddNew_Vehicle"
             android:exported="true" />
 
-        <activity
-            android:name=".User.User_SelectSlot_RealtimeBooking"
+        <activity android:name=".User.User_Show_Vehicle"
             android:exported="true" />
 
-        <activity
-            android:name=".User.User_BookingSummary"
+        <activity android:name=".User.AdvanceBooking.User_AdvanceBooking"
             android:exported="true" />
 
-        <activity
-            android:name=".User.User_CompletePayment"
+        <activity android:name=".User.RealtimeBooking.User_SelectSlot_RealtimeBooking"
             android:exported="true" />
 
-        <activity
-            android:name=".User.User_Payment"
+        <activity android:name=".User.RealtimeBooking.User_RealtimeBooking_Summary"
             android:exported="true" />
 
-        <activity
-            android:name=".User.User_AddNew_Vehicle"
+        <activity android:name=".User.AdvanceBooking.User_AdvanceBooking_Summary"
             android:exported="true" />
 
-        <activity
-            android:name=".User.User_Show_Vehicle"
+        <activity android:name=".User.AdvanceBooking.User_Payment_AdvanceBooking"
             android:exported="true" />
 
-        <activity
-            android:name=".Admin.Admin_MainPage"
+        <activity android:name=".User.AdvanceBooking.User_CompletePayment_AdvanceBooking"
             android:exported="true" />
 
-        <activity
-            android:name=".Admin.Admin_Manage_ParkingSlot"
+        <activity android:name=".User.RealtimeBooking.User_CompletePayment_RealtimeBooking"
             android:exported="true" />
 
-        <activity
-            android:name=".Admin.Admin_Add_NewSlot"
+        <activity android:name=".User.RealtimeBooking.User_Payment_RealtimeBooking"
             android:exported="true" />
 
-        <activity
-            android:name=".Admin.Admin_ManageUser"
+
+        <!-- Admin activities -->
+        <activity android:name=".Admin.Admin_MainPage"
             android:exported="true" />
 
-        <activity
-            android:name=".Admin.Admin_View_Report"
+        <activity android:name=".Admin.Admin_Manage_ParkingSlot"
             android:exported="true" />
 
-        <activity
-            android:name=".Admin.Admin_Manage_Bookings"
+        <activity android:name=".Admin.Admin_Add_NewSlot"
+            android:exported="true" />
+
+        <activity android:name=".Admin.Admin_ManageUser"
+            android:exported="true" />
+
+        <activity android:name=".Admin.Admin_View_Report"
+            android:exported="true" />
+
+        <activity android:name=".Admin.Admin_Manage_Bookings"
+            android:exported="true" />
+
+        <activity android:name=".Admin.Admin_ScanQr"
             android:exported="true" />
 
     </application>

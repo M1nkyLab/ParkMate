@@ -1,9 +1,10 @@
-package com.example.parkmate.User
+package com.example.parkmate.User.RealtimeBooking
 
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
@@ -21,6 +22,8 @@ class User_SelectSlot_RealtimeBooking : AppCompatActivity() {
     private val plateList = mutableListOf<String>()
     private lateinit var plateAdapter: ArrayAdapter<String>
 
+    private var hourlyRates: Map<String, Double> = emptyMap()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.user_select_realtimebooking)
@@ -28,18 +31,17 @@ class User_SelectSlot_RealtimeBooking : AppCompatActivity() {
         plateSpinner = findViewById(R.id.plateSpinner)
         gridSlots = findViewById(R.id.gridSlots)
 
-        // Plate spinner adapter
         plateAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, plateList)
         plateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         plateSpinner.adapter = plateAdapter
 
         loadUserPlates()
-        fetchParkingSlots()
+        loadRates()
     }
 
+    // 🔹 Load user's registered vehicles
     private fun loadUserPlates() {
         val userId = auth.currentUser?.uid ?: return
-
         db.collection("users").document(userId).collection("vehicles")
             .get()
             .addOnSuccessListener { documents ->
@@ -56,9 +58,31 @@ class User_SelectSlot_RealtimeBooking : AppCompatActivity() {
             }
     }
 
-    private fun fetchParkingSlots() {
-        db.collection("parking_slots")
+    // 🔹 Load hourly rates from Firestore
+    private fun loadRates() {
+        db.collection("rates").document("standard")
             .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    // Convert rates to Double map
+                    hourlyRates = document.data?.mapValues { it.value.toString().toDouble() } ?: emptyMap()
+                    if (hourlyRates.isEmpty()) {
+                        Toast.makeText(this, "No rates found in Firestore", Toast.LENGTH_LONG).show()
+                    } else {
+                        fetchParkingSlots()
+                    }
+                } else {
+                    Toast.makeText(this, "Rates not found in Firestore", Toast.LENGTH_LONG).show()
+                }
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Failed to load rates", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    // 🔹 Fetch parking slots from Firestore
+    private fun fetchParkingSlots() {
+        db.collection("parking_slots").get()
             .addOnSuccessListener { result ->
                 gridSlots.removeAllViews()
                 if (result.isEmpty) {
@@ -69,22 +93,23 @@ class User_SelectSlot_RealtimeBooking : AppCompatActivity() {
                     val slotId = document.getString("slotId") ?: document.id
                     val statusString = document.getString("status") ?: "Occupied"
                     val isAvailable = (statusString == "Available")
-                    val baseRate = document.getDouble("baseRate") ?: 3.0
-                    addSlotCard(slotId, isAvailable, baseRate)
+                    addSlotCard(slotId, isAvailable)
                 }
             }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Failed to load parking slots: ${e.message}", Toast.LENGTH_LONG).show()
+            .addOnFailureListener {
+                Toast.makeText(this, "Failed to load parking slots", Toast.LENGTH_SHORT).show()
             }
     }
 
-    private fun addSlotCard(slotName: String, isAvailable: Boolean, baseRate: Double) {
-        val timeOptions = listOf("1 Hour", "2 Hours", "3 Hours", "4 Hours")
+    // 🔹 Create each slot card dynamically
+    private fun addSlotCard(slotName: String, isAvailable: Boolean) {
+        // Build time options dynamically from Firestore rates
+        val sortedRates = hourlyRates.toSortedMap(compareBy { it.toInt() })
+        val timeOptions = sortedRates.keys.map { "$it Hour" }
 
         val card = CardView(this).apply {
             radius = 18f
             cardElevation = 6f
-            useCompatPadding = true
             setCardBackgroundColor(Color.WHITE)
             layoutParams = GridLayout.LayoutParams().apply {
                 width = 0
@@ -124,17 +149,19 @@ class User_SelectSlot_RealtimeBooking : AppCompatActivity() {
         }
 
         val priceView = TextView(this).apply {
-            text = "Price: RM${String.format("%.2f", baseRate)}"
+            val firstRate = sortedRates.values.firstOrNull() ?: 0.0
+            text = "Price: RM${String.format("%.2f", firstRate)}"
             textSize = 14f
             setTextColor(Color.DKGRAY)
             setPadding(0, 8, 0, 16)
         }
 
+        // Update price based on spinner selection
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: android.view.View?, position: Int, id: Long) {
-                val hours = position + 1
-                val price = baseRate * hours
-                priceView.text = "Price: RM${String.format("%.2f", price)}"
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val selectedHourKey = sortedRates.keys.elementAt(position)
+                val selectedRate = sortedRates[selectedHourKey] ?: 0.0
+                priceView.text = "Price: RM${String.format("%.2f", selectedRate)}"
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
@@ -154,14 +181,14 @@ class User_SelectSlot_RealtimeBooking : AppCompatActivity() {
                     return@setOnClickListener
                 }
 
-                val selectedTime = spinner.selectedItem.toString()
-                val hours = spinner.selectedItemPosition + 1
-                val totalPrice = baseRate * hours
+                val selectedIndex = spinner.selectedItemPosition
+                val selectedHourKey = sortedRates.keys.elementAt(selectedIndex)
+                val totalPrice = sortedRates[selectedHourKey] ?: 0.0
 
-                val intent = Intent(this@User_SelectSlot_RealtimeBooking, User_BookingSummary::class.java)
+                val intent = Intent(this@User_SelectSlot_RealtimeBooking, User_RealtimeBooking_Summary::class.java)
                 intent.putExtra("slotName", slotName)
                 intent.putExtra("selectedPlate", selectedPlate)
-                intent.putExtra("selectedTime", selectedTime)
+                intent.putExtra("selectedTime", "$selectedHourKey Hour")
                 intent.putExtra("price", totalPrice)
                 startActivity(intent)
             }

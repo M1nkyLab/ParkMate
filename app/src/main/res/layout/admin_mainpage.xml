@@ -130,6 +130,7 @@
 
         <!-- Scan QR Button -->
         <Button
+            android:id="@+id/scanQRButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Scan QR"

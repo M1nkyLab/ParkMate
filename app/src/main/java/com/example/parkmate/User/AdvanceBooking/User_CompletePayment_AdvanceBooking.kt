@@ -1,13 +1,15 @@
-package com.example.parkmate.User
+package com.example.parkmate.User.AdvanceBooking
 
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.parkmate.R
+import com.example.parkmate.User.User_Home
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
@@ -15,7 +17,7 @@ import com.google.zxing.qrcode.QRCodeWriter
 import java.text.NumberFormat
 import java.util.Locale
 
-class User_CompletePayment : AppCompatActivity() {
+class User_CompletePayment_AdvanceBooking : AppCompatActivity() {
 
     private lateinit var db: FirebaseFirestore
     private lateinit var slotInfo: TextView
@@ -46,9 +48,27 @@ class User_CompletePayment : AppCompatActivity() {
         // --- Update Firestore slot status to Booked ---
         updateSlotStatus(slotName)
 
-        // --- Generate QR Code ---
-        val qrData = "Slot: $slotName\nDuration: $selectedTime\nTotal: $formattedPrice"
-        generateQRCode(qrData, qrCodeView)
+        // Create a unique booking ID (timestamp-based)
+        val bookingId = System.currentTimeMillis().toString()
+
+        // --- Save booking to Firestore ---
+        val bookingData = hashMapOf(
+            "bookingId" to bookingId,
+            "slotName" to slotName,
+            "selectedTime" to selectedTime,
+            "price" to price,
+            "status" to "Booked",
+            "gateAccess" to false // initially false, admin will flip this to true when scanned
+        )
+
+        db.collection("bookings").document(bookingId).set(bookingData)
+            .addOnSuccessListener {
+                // Generate QR that contains the bookingId only (unique + scannable)
+                generateQRCode(bookingId, qrCodeView)
+            }
+            .addOnFailureListener { e ->
+                slotInfo.append("\n⚠ Failed to save booking: ${e.message}")
+            }
 
         // --- Back to home button ---
         backButton.setOnClickListener {
@@ -63,7 +83,7 @@ class User_CompletePayment : AppCompatActivity() {
         val slotRef = db.collection("parking_slots").document(slotId)
         slotRef.update("status", "Booked")
             .addOnSuccessListener {
-                // optional: toast or log
+                // optional log
             }
             .addOnFailureListener { e ->
                 slotInfo.append("\n⚠ Failed to update status: ${e.message}")
@@ -73,14 +93,14 @@ class User_CompletePayment : AppCompatActivity() {
     private fun generateQRCode(data: String, imageView: ImageView) {
         val writer = QRCodeWriter()
         try {
-            val bitMatrix = writer.encode(data, BarcodeFormat.QR_CODE, 400, 400)
+            val bitMatrix = writer.encode(data, BarcodeFormat.QR_CODE, 500, 500)
             val width = bitMatrix.width
             val height = bitMatrix.height
             val bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
             for (x in 0 until width) {
                 for (y in 0 until height) {
                     bmp.setPixel(x, y,
-                        if (bitMatrix[x, y]) android.graphics.Color.BLACK else android.graphics.Color.WHITE
+                        if (bitMatrix[x, y]) Color.BLACK else Color.WHITE
                     )
                 }
             }

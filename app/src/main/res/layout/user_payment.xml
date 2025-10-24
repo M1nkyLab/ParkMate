@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="24dp"
-        tools:context=".User.User_Payment">
+        tools:context=".User.RealtimeBooking.User_Payment_RealtimeBooking">
 
         <TextView
             android:layout_width="wrap_content"

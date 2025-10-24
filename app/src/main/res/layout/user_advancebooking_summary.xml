@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:padding="24dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+        <!-- Header -->
+        <TextView
+            android:text="Booking Summary"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:layout_marginBottom="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <!-- Card Section -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:background="#2E2E2E"
+            android:padding="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:elevation="4dp"
+            android:clipToOutline="true"
+            android:backgroundTint="#2E2E2E"
+            android:radius="12dp">
+
+            <!-- Parking Slot -->
+            <TextView
+                android:text="Parking Slot:"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/summarySlot"
+                android:textColor="#FFFFFF"
+                android:textSize="17sp"
+                android:layout_marginBottom="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <!-- Vehicle Plate -->
+            <TextView
+                android:text="Vehicle Plate:"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/summaryPlate"
+                android:textColor="#FFFFFF"
+                android:textSize="17sp"
+                android:layout_marginBottom="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <!-- Booking Date -->
+            <TextView
+                android:text="Booking Date:"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/summaryDate"
+                android:textColor="#FFFFFF"
+                android:textSize="17sp"
+                android:layout_marginBottom="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <!-- Start Time -->
+            <TextView
+                android:text="Start Time:"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/summaryStartTime"
+                android:textColor="#FFFFFF"
+                android:textSize="17sp"
+                android:layout_marginBottom="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <!-- End Time -->
+            <TextView
+                android:text="End Time:"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/summaryEndTime"
+                android:textColor="#FFFFFF"
+                android:textSize="17sp"
+                android:layout_marginBottom="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <!-- Duration -->
+            <TextView
+                android:text="Duration:"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/summaryDuration"
+                android:textColor="#FFFFFF"
+                android:textSize="17sp"
+                android:layout_marginBottom="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <!-- Total Price -->
+            <TextView
+                android:text="Total Price:"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/summaryPrice"
+                android:textColor="#8E44AD"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <!-- Confirm Button -->
+        <Button
+            android:id="@+id/confirmBookingBtn"
+            android:text="Proceed to Payment"
+            android:backgroundTint="#8E44AD"
+            android:textColor="#FFFFFF"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</ScrollView>

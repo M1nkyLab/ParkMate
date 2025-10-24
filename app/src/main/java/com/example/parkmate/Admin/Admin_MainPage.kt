@@ -24,8 +24,7 @@ class Admin_MainPage : AppCompatActivity() {
         val manageUsers: Button = findViewById(R.id.manageusers)
         val viewReport: Button = findViewById(R.id.viewreport)
         val manageBookings: Button = findViewById(R.id.managebookings)
-
-
+        val scanQRButton: Button = findViewById(R.id.scanQRButton)
 
         // Set welcome message dynamically
         val currentUserEmail = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.email
@@ -61,6 +60,12 @@ class Admin_MainPage : AppCompatActivity() {
         // navigate to the manage booking page
         manageBookings.setOnClickListener {
             val intent = Intent(this, Admin_Manage_Bookings::class.java)
+            startActivity(intent)
+        }
+
+        // Navigate to Scan QR Page
+        scanQRButton.setOnClickListener {
+            val intent = Intent(this, Admin_ScanQr::class.java)
             startActivity(intent)
         }
     }

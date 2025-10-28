@@ -32,7 +32,7 @@ class User_Payment_RealtimeBooking : AppCompatActivity() {
     private var price: Double = 0.0
     private var slotName: String = ""
     private var selectedTime: String = ""
-    private var numberPlate: String = ""
+    private var vehicleNumber: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +60,7 @@ class User_Payment_RealtimeBooking : AppCompatActivity() {
     private fun getIntentData() {
         slotName = intent.getStringExtra("slotName") ?: "N/A"
         selectedTime = intent.getStringExtra("selectedTime") ?: "N/A"
-        numberPlate = intent.getStringExtra("numberPlate") ?: "N/A"
+        vehicleNumber = intent.getStringExtra("selectedPlate") ?: "N/A"
         price = intent.getDoubleExtra("price", 0.0)
 
         val format = NumberFormat.getCurrencyInstance(Locale("ms", "MY"))
@@ -129,54 +129,46 @@ class User_Payment_RealtimeBooking : AppCompatActivity() {
 
         Handler(Looper.getMainLooper()).postDelayed({
             progressDialog.dismiss()
-            saveBookingToFirestore()
+            showSuccessDialog()
         }, 2000)
-    }
-
-    private fun saveBookingToFirestore() {
-        val userId = auth.currentUser?.uid ?: "UnknownUser"
-
-        val bookingData = hashMapOf(
-            "userId" to userId,
-            "slotName" to slotName,
-            "duration" to selectedTime,
-            "numberPlate" to numberPlate,
-            "price" to price,
-            "status" to "Booked",
-            "timestamp" to System.currentTimeMillis()
-        )
-
-        // Save booking in Firestore
-        db.collection("bookings")
-            .add(bookingData)
-            .addOnSuccessListener {
-                // Update slot status in parking_slots
-                db.collection("parking_slots").document(slotName)
-                    .update("status", "Booked")
-                    .addOnSuccessListener {
-                        showSuccessDialog()
-                    }
-                    .addOnFailureListener { e ->
-                        Toast.makeText(this, "Failed to update slot: ${e.message}", Toast.LENGTH_SHORT).show()
-                    }
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Failed to save booking: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
     }
 
     private fun showSuccessDialog() {
         AlertDialog.Builder(this)
             .setTitle("Payment Successful")
-            .setMessage("Your booking has been saved to the system.")
+            .setMessage("Your payment has been processed successfully.")
             .setPositiveButton("OK") { dialog, _ ->
                 dialog.dismiss()
-                val intent = Intent(this, User_CompletePayment_RealtimeBooking::class.java)
-                intent.putExtra("slotName", slotName)
-                intent.putExtra("selectedTime", selectedTime)
-                intent.putExtra("price", price)
-                startActivity(intent)
-                finish()
+
+                val bookingId = System.currentTimeMillis().toString()
+                val userEmail = auth.currentUser?.email ?: "Unknown Email"
+
+                val bookingData = hashMapOf(
+                    "bookingId" to bookingId,
+                    "slotName" to slotName,
+                    "selectedTime" to selectedTime,
+                    "price" to price,
+                    "status" to "Booked",
+                    "gateAccess" to false,
+                    "userEmail" to userEmail,
+                    "vehicleNumber" to vehicleNumber
+                )
+
+                db.collection("bookings").document(bookingId).set(bookingData)
+                    .addOnSuccessListener {
+                        // Update slot status
+                        db.collection("parking_slots").document(slotName)
+                            .update("status", "Booked")
+
+                        // Go to complete page (for QR code)
+                        val intent = Intent(this, User_CompletePayment_RealtimeBooking::class.java)
+                        intent.putExtra("bookingId", bookingId)
+                        startActivity(intent)
+                        finish()
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(this, "Failed to save booking: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
             }
             .setCancelable(false)
             .show()

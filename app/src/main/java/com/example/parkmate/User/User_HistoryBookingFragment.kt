@@ -17,15 +17,19 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
 import com.google.zxing.qrcode.QRCodeWriter
+import java.text.SimpleDateFormat
+import java.util.*
 
-// Data class to represent a booking document from Firestore
+// Firestore data model
 data class Booking(
     val bookingId: String = "",
     val slotName: String = "",
-    val duration: String = "",
+    val selectedTime: String = "",
+    val vehicleNumber: String = "",
     val price: Double = 0.0,
     val status: String = "",
-    val date: String = "" // ✅ Added date field
+    val gateAccess: Boolean = false,
+    val date: String = ""
 )
 
 class User_HistoryBookingFragment : Fragment() {
@@ -34,6 +38,7 @@ class User_HistoryBookingFragment : Fragment() {
     private lateinit var bookingAdapter: BookingAdapter
     private val bookingList = mutableListOf<Booking>()
     private lateinit var db: FirebaseFirestore
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,7 +48,9 @@ class User_HistoryBookingFragment : Fragment() {
 
         recyclerView = view.findViewById(R.id.historyRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
         db = FirebaseFirestore.getInstance()
+        auth = FirebaseAuth.getInstance()
 
         bookingAdapter = BookingAdapter(bookingList)
         recyclerView.adapter = bookingAdapter
@@ -54,27 +61,38 @@ class User_HistoryBookingFragment : Fragment() {
     }
 
     private fun loadUserBookings() {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val userEmail = auth.currentUser?.email ?: return
 
         db.collection("bookings")
-            .whereEqualTo("userId", userId)
+            .whereEqualTo("userEmail", userEmail)
             .get()
             .addOnSuccessListener { result ->
                 bookingList.clear()
+
                 for (doc in result) {
+                    val timestamp = doc.getLong("timestamp")
+                    val dateFormatted = if (timestamp != null) {
+                        val sdf = SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault())
+                        sdf.format(Date(timestamp))
+                    } else {
+                        doc.getString("date") ?: "Unknown"
+                    }
+
                     val booking = Booking(
                         bookingId = doc.getString("bookingId") ?: doc.id,
                         slotName = doc.getString("slotName") ?: "Unknown",
-                        duration = doc.getString("duration") ?: "Unknown",
+                        selectedTime = doc.getString("selectedTime") ?: "Unknown",
+                        vehicleNumber = doc.getString("vehicleNumber") ?: "N/A",
                         price = doc.getDouble("price") ?: 0.0,
                         status = doc.getString("status") ?: "Unknown",
-                        date = doc.getString("date") ?: "Unknown" // ✅ Get date from Firestore
+                        gateAccess = doc.getBoolean("gateAccess") ?: false,
+                        date = dateFormatted
                     )
                     bookingList.add(booking)
                 }
 
-                // Sort by most recent (if bookingId or date is time-based)
-                bookingList.sortByDescending { it.date }
+                // Sort by newest first (timestamp or bookingId)
+                bookingList.sortByDescending { it.bookingId }
 
                 bookingAdapter.notifyDataSetChanged()
             }
@@ -91,7 +109,7 @@ class User_HistoryBookingFragment : Fragment() {
             val slotName: TextView = view.findViewById(R.id.slotNameText)
             val duration: TextView = view.findViewById(R.id.durationText)
             val price: TextView = view.findViewById(R.id.priceText)
-            val date: TextView = view.findViewById(R.id.dateText) // ✅ Added
+            val date: TextView = view.findViewById(R.id.dateText)
             val status: TextView = view.findViewById(R.id.statusText)
             val qrCode: ImageView = view.findViewById(R.id.qrCodeView)
         }
@@ -104,20 +122,19 @@ class User_HistoryBookingFragment : Fragment() {
 
         override fun onBindViewHolder(holder: BookingViewHolder, position: Int) {
             val booking = list[position]
+
             holder.slotName.text = "Slot: ${booking.slotName}"
-            holder.duration.text = "Duration: ${booking.duration}"
+            holder.duration.text = "Duration: ${booking.selectedTime}"
             holder.price.text = "Price: RM %.2f".format(booking.price)
-            holder.date.text = "Date: ${booking.date}" // ✅ Display date
+            holder.date.text = "Date: ${booking.date}"
             holder.status.text = "Status: ${booking.status}"
 
-            // Generate QR code
-            generateQRCode(booking.bookingId, holder.qrCode)
+            generateQRCode("Booking ID: ${booking.bookingId}", holder.qrCode)
         }
 
         override fun getItemCount(): Int = list.size
     }
 
-    // QR code generator
     private fun generateQRCode(data: String, imageView: ImageView) {
         val writer = QRCodeWriter()
         try {

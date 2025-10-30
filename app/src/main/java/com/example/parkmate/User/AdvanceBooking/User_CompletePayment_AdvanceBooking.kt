@@ -12,8 +12,9 @@ import com.example.parkmate.R
 import com.example.parkmate.User.User_Home
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.zxing.BarcodeFormat
+import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
-import com.google.zxing.qrcode.QRCodeWriter
+import com.google.zxing.common.BitMatrix
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -91,22 +92,33 @@ class User_CompletePayment_AdvanceBooking : AppCompatActivity() {
     }
 
     private fun generateQRCode(data: String, imageView: ImageView) {
-        val writer = QRCodeWriter()
         try {
-            val bitMatrix = writer.encode(data, BarcodeFormat.QR_CODE, 500, 500)
+            val writer = MultiFormatWriter()
+            val bitMatrix: BitMatrix = writer.encode(
+                data,
+                BarcodeFormat.QR_CODE,
+                500,
+                500
+            )
+
             val width = bitMatrix.width
             val height = bitMatrix.height
-            val bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+
             for (x in 0 until width) {
                 for (y in 0 until height) {
-                    bmp.setPixel(x, y,
+                    bitmap.setPixel(
+                        x,
+                        y,
                         if (bitMatrix[x, y]) Color.BLACK else Color.WHITE
                     )
                 }
             }
-            imageView.setImageBitmap(bmp)
+
+            imageView.setImageBitmap(bitmap)
         } catch (e: WriterException) {
             e.printStackTrace()
+            slotInfo.append("\n⚠ Failed to generate QR code: ${e.message}")
         }
     }
 }

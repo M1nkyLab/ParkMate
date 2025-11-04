@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.parkmate.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+// We REMOVE Timestamp and Calendar imports. They are no longer needed here.
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -31,7 +32,7 @@ class User_Payment_RealtimeBooking : AppCompatActivity() {
 
     private var price: Double = 0.0
     private var slotName: String = ""
-    private var selectedTime: String = ""
+    private var selectedTime: String = "" // This will be "2 Hour", "3 Hour", etc.
     private var vehicleNumber: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -143,20 +144,31 @@ class User_Payment_RealtimeBooking : AppCompatActivity() {
                 val bookingId = System.currentTimeMillis().toString()
                 val userEmail = auth.currentUser?.email ?: "Unknown Email"
 
+                // --- START OF MODIFIED LOGIC ---
+                // We only save the *number* of hours.
+                // We parse the "2 Hour" string to get the number 2
+                val durationHours = selectedTime.split(" ")[0].toLongOrNull() ?: 0
+                // --- END OF MODIFIED LOGIC ---
+
                 val bookingData = hashMapOf(
                     "bookingId" to bookingId,
                     "slotName" to slotName,
-                    "selectedTime" to selectedTime,
+                    "selectedTime" to selectedTime, // This is just the "2 Hour" string for display
                     "price" to price,
-                    "status" to "Booked",
+                    "status" to "Booked", // Status is "Booked", NOT "Active"
                     "gateAccess" to false,
                     "userEmail" to userEmail,
-                    "vehicleNumber" to vehicleNumber
+                    "vehicleNumber" to vehicleNumber,
+
+                    // --- SAVE DURATION FOR THE ADMIN'S SCANNER ---
+                    "durationHours" to durationHours, // We save the number (e.g., 2)
+
+                    "bookingType" to "Realtime"
                 )
 
                 db.collection("bookings").document(bookingId).set(bookingData)
                     .addOnSuccessListener {
-                        // Update slot status
+                        // Update slot status to "Booked"
                         db.collection("parking_slots").document(slotName)
                             .update("status", "Booked")
 

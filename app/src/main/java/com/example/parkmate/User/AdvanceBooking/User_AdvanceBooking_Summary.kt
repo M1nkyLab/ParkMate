@@ -53,12 +53,20 @@ class User_AdvanceBooking_Summary : AppCompatActivity() {
         // Proceed to payment
         confirmPaymentBtn.setOnClickListener {
             val intent = Intent(this, User_Payment_AdvanceBooking::class.java)
-            intent.putExtra("numberPlate", plate)           // match User_Payment
-            intent.putExtra("slotName", slot)               // match User_Payment
-            intent.putExtra("selectedTime", "$startTime - $endTime") // combine start/end
-            intent.putExtra("price", totalPrice)           // match User_Payment
+            // Original data
+            intent.putExtra("numberPlate", plate)
+            intent.putExtra("slotName", slot)
+            intent.putExtra("selectedTime", "$startTime - $endTime") // This is the display string
+            intent.putExtra("price", totalPrice)
+
+            // --- FIXED: Pass the raw data so the next screen can calculate Timestamps ---
+            intent.putExtra("selectedDate", date)
+            intent.putExtra("selectedStartTime", startTime)
+            intent.putExtra("durationHours", duration)
+
             startActivity(intent)
             finish()
         }
     }
 }
+

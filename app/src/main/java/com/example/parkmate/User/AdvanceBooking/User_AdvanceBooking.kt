@@ -90,7 +90,8 @@ class User_AdvanceBooking : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
-        confirmBookingBtn.setOnClickListener { saveBooking() }
+        // --- FIXED: This button now goes to the Summary Screen ---
+        confirmBookingBtn.setOnClickListener { goToSummary() }
     }
 
     /** Load user's vehicle plates */
@@ -116,11 +117,13 @@ class User_AdvanceBooking : AppCompatActivity() {
     /** Load available parking slots */
     private fun loadParkingSlots() {
         db.collection("parking_slots")
+            // --- NEW: Only show "Available" slots ---
+            .whereEqualTo("status", "Available")
             .get()
             .addOnSuccessListener { documents ->
                 slotList.clear()
                 for (doc in documents) {
-                    val slotName = doc.getString("name") ?: doc.id
+                    val slotName = doc.getString("slotId") ?: doc.id // Use slotId
                     slotList.add(slotName)
                 }
                 if (slotList.isEmpty()) slotList.add("No slots available")
@@ -193,8 +196,21 @@ class User_AdvanceBooking : AppCompatActivity() {
             calendar.time = startDate
             calendar.add(Calendar.HOUR_OF_DAY, durationStr.toInt())
 
+            // --- FIXED: Format end time to match start time ---
+            val sdfTime = SimpleDateFormat("HH:mm", Locale.getDefault())
             val endDateFormatted = sdfDateTime.format(calendar.time)
-            estimatedEndTime.text = "Estimated End Time: $endDateFormatted"
+
+            // Check if it's a different day
+            val sdfDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            val originalDate = sdfDate.parse(selectedDateStr)
+            val newDate = sdfDate.parse(endDateFormatted)
+
+            if(originalDate == newDate) {
+                estimatedEndTime.text = "Estimated End Time: ${sdfTime.format(calendar.time)}"
+            } else {
+                estimatedEndTime.text = "Estimated End Time: ${sdfTime.format(calendar.time)} (next day)"
+            }
+
         } catch (e: Exception) {
             estimatedEndTime.text = "Estimated End Time: -"
         }
@@ -207,9 +223,8 @@ class User_AdvanceBooking : AppCompatActivity() {
         priceText.text = "Total Price: RM %.2f".format(totalPrice)
     }
 
-    /** Save booking to Firestore and open Summary Page */
-    private fun saveBooking() {
-        val userId = auth.currentUser?.uid ?: return
+    /** --- FIXED: This function no longer saves to DB. It just goes to the summary. --- */
+    private fun goToSummary() {
         val plate = plateSpinner.selectedItem.toString()
         val slot = slotSpinner.selectedItem.toString()
         val date = selectedDateText.text.toString()
@@ -222,38 +237,24 @@ class User_AdvanceBooking : AppCompatActivity() {
             Toast.makeText(this, "Please select date and time", Toast.LENGTH_SHORT).show()
             return
         }
+        if (plate == "No vehicles found") {
+            Toast.makeText(this, "Please add a vehicle first", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (slot == "No slots available") {
+            Toast.makeText(this, "No slots available for booking", Toast.LENGTH_SHORT).show()
+            return
+        }
 
-        val bookingData = hashMapOf(
-            "plate" to plate,
-            "slot" to slot,
-            "date" to date,
-            "startTime" to time,
-            "durationHours" to duration,
-            "endTime" to endTimeText,
-            "totalPrice" to totalPrice,
-            "status" to "Booked",
-            "createdAt" to System.currentTimeMillis()
-        )
-
-        db.collection("users").document(userId)
-            .collection("bookings")
-            .add(bookingData)
-            .addOnSuccessListener {
-                // Navigate to Summary page directly (no Toast)
-                val intent = Intent(this, User_AdvanceBooking_Summary::class.java)
-                intent.putExtra("plate", plate)
-                intent.putExtra("slot", slot)
-                intent.putExtra("date", date)
-                intent.putExtra("time", time)
-                intent.putExtra("duration", duration)
-                intent.putExtra("endTime", endTimeText)
-                intent.putExtra("totalPrice", totalPrice)
-                startActivity(intent)
-                finish()
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Error saving booking: ${e.message}", Toast.LENGTH_SHORT)
-                    .show()
-            }
+        // Navigate to Summary page
+        val intent = Intent(this, User_AdvanceBooking_Summary::class.java)
+        intent.putExtra("plate", plate)
+        intent.putExtra("slot", slot)
+        intent.putExtra("date", date)
+        intent.putExtra("time", time)
+        intent.putExtra("duration", duration)
+        intent.putExtra("endTime", endTimeText)
+        intent.putExtra("totalPrice", totalPrice)
+        startActivity(intent)
     }
 }

@@ -12,11 +12,11 @@ import com.example.parkmate.R
 import com.example.parkmate.User.User_Home
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.zxing.BarcodeFormat
-import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
 import com.google.zxing.common.BitMatrix
 import java.text.NumberFormat
 import java.util.Locale
+import com.google.zxing.qrcode.QRCodeWriter // Use the specific writer
 
 class User_CompletePayment_AdvanceBooking : AppCompatActivity() {
 
@@ -34,42 +34,15 @@ class User_CompletePayment_AdvanceBooking : AppCompatActivity() {
         backButton = findViewById(R.id.backToHomeBtn)
         db = FirebaseFirestore.getInstance()
 
-        // --- Get data from previous page ---
-        val slotName = intent.getStringExtra("slotName") ?: "Unknown Slot"
-        val selectedTime = intent.getStringExtra("selectedTime") ?: "Unknown Duration"
-        val price = intent.getDoubleExtra("price", 0.0)
+        // --- FIXED: Receive the unique bookingId from the payment screen ---
+        val bookingId = intent.getStringExtra("bookingId")
+        if (bookingId == null) {
+            slotInfo.text = "Error: Booking ID not found."
+            return
+        }
 
-        // Format price
-        val format = NumberFormat.getCurrencyInstance(Locale("ms", "MY"))
-        val formattedPrice = format.format(price)
-
-        // --- Display slot info ---
-        slotInfo.text = "Your Slot: $slotName\nDuration: $selectedTime\nTotal: $formattedPrice"
-
-        // --- Update Firestore slot status to Booked ---
-        updateSlotStatus(slotName)
-
-        // Create a unique booking ID (timestamp-based)
-        val bookingId = System.currentTimeMillis().toString()
-
-        // --- Save booking to Firestore ---
-        val bookingData = hashMapOf(
-            "bookingId" to bookingId,
-            "slotName" to slotName,
-            "selectedTime" to selectedTime,
-            "price" to price,
-            "status" to "Booked",
-            "gateAccess" to false // initially false, admin will flip this to true when scanned
-        )
-
-        db.collection("bookings").document(bookingId).set(bookingData)
-            .addOnSuccessListener {
-                // Generate QR that contains the bookingId only (unique + scannable)
-                generateQRCode(bookingId, qrCodeView)
-            }
-            .addOnFailureListener { e ->
-                slotInfo.append("\n⚠ Failed to save booking: ${e.message}")
-            }
+        // --- NEW: Load booking data from Firestore using the ID ---
+        loadBookingData(bookingId)
 
         // --- Back to home button ---
         backButton.setOnClickListener {
@@ -80,20 +53,42 @@ class User_CompletePayment_AdvanceBooking : AppCompatActivity() {
         }
     }
 
-    private fun updateSlotStatus(slotId: String) {
-        val slotRef = db.collection("parking_slots").document(slotId)
-        slotRef.update("status", "Booked")
-            .addOnSuccessListener {
-                // optional log
+    // --- NEW: Function to load data from Firestore ---
+    private fun loadBookingData(bookingId: String) {
+        db.collection("bookings").document(bookingId).get()
+            .addOnSuccessListener { doc ->
+                if (doc.exists()) {
+                    val slotName = doc.getString("slotName")
+                    val selectedTime = doc.getString("selectedTime") // Use the display string
+                    val vehicleNumber = doc.getString("vehicleNumber")
+                    val price = doc.getDouble("price") ?: 0.0
+
+                    val format = NumberFormat.getCurrencyInstance(Locale("ms", "MY"))
+                    val formattedPrice = format.format(price)
+
+                    slotInfo.text = """
+                        Your Slot: $slotName
+                        Duration: $selectedTime
+                        Plate: $vehicleNumber
+                        Total: $formattedPrice
+                    """.trimIndent()
+
+                    // --- FIXED: Generate QR that contains the bookingId only ---
+                    generateQRCode(bookingId, qrCodeView)
+
+                } else {
+                    slotInfo.text = "❌ Booking not found."
+                }
             }
-            .addOnFailureListener { e ->
-                slotInfo.append("\n⚠ Failed to update status: ${e.message}")
+            .addOnFailureListener {
+                slotInfo.text = "⚠ Failed to load booking data."
             }
     }
 
+
     private fun generateQRCode(data: String, imageView: ImageView) {
+        val writer = QRCodeWriter() // Use specific writer
         try {
-            val writer = MultiFormatWriter()
             val bitMatrix: BitMatrix = writer.encode(
                 data,
                 BarcodeFormat.QR_CODE,
@@ -122,3 +117,4 @@ class User_CompletePayment_AdvanceBooking : AppCompatActivity() {
         }
     }
 }
+

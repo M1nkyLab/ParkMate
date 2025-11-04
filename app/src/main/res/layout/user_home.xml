@@ -10,7 +10,6 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         android:background="#000000">
 
         <!-- Fragment Container (fills all available space) -->
@@ -48,12 +47,11 @@
             android:background="@android:color/transparent"
             app:menu="@menu/bottom_nav_menu"
             app:itemIconSize="28dp"
-            app:itemIconTint="@android:color/white"
-            app:itemTextColor="@android:color/white"
-            app:itemRippleColor="@color/white"
+
+
             app:itemPaddingTop="8dp"
             app:itemPaddingBottom="8dp"
             app:labelVisibilityMode="unlabeled" />
-    </com.google.android.material.card.MaterialCardView>
+        </com.google.android.material.card.MaterialCardView>
 
 </FrameLayout>

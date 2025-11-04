@@ -5,9 +5,11 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import com.example.parkmate.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -31,9 +33,29 @@ class User_SelectSlot_RealtimeBooking : AppCompatActivity() {
         plateSpinner = findViewById(R.id.plateSpinner)
         gridSlots = findViewById(R.id.gridSlots)
 
-        plateAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, plateList)
+        // --- MODIFIED ---
+        // We will create a custom adapter for the plate spinner to make it dark-themed
+        plateAdapter = object : ArrayAdapter<String>(
+            this,
+            android.R.layout.simple_spinner_item,
+            plateList
+        ) {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val view = super.getView(position, convertView, parent) as TextView
+                view.setTextColor(Color.WHITE) // Set text color to white
+                return view
+            }
+
+            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val view = super.getDropDownView(position, convertView, parent) as TextView
+                view.setBackgroundColor(Color.parseColor("#1A1A1A")) // Dark background
+                view.setTextColor(Color.WHITE) // White text
+                return view
+            }
+        }
         plateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         plateSpinner.adapter = plateAdapter
+        // --- END MODIFICATION ---
 
         loadUserPlates()
         loadRates()
@@ -110,7 +132,10 @@ class User_SelectSlot_RealtimeBooking : AppCompatActivity() {
         val card = CardView(this).apply {
             radius = 18f
             cardElevation = 6f
-            setCardBackgroundColor(Color.WHITE)
+            // --- MODIFIED ---
+            // Set card background to your app's dark card color
+            setCardBackgroundColor(Color.parseColor("#1A1A1A"))
+            // --- END MODIFICATION ---
             layoutParams = GridLayout.LayoutParams().apply {
                 width = 0
                 height = GridLayout.LayoutParams.WRAP_CONTENT
@@ -128,7 +153,9 @@ class User_SelectSlot_RealtimeBooking : AppCompatActivity() {
         val nameView = TextView(this).apply {
             text = "Slot: $slotName"
             textSize = 18f
-            setTextColor(Color.BLACK)
+            // --- MODIFIED ---
+            setTextColor(Color.WHITE)
+            // --- END MODIFICATION ---
             setPadding(0, 8, 0, 8)
         }
 
@@ -140,11 +167,34 @@ class User_SelectSlot_RealtimeBooking : AppCompatActivity() {
         }
 
         val spinner = Spinner(this).apply {
-            adapter = ArrayAdapter(
+            // --- MODIFIED ---
+            // Create a custom adapter to style the spinner for the dark theme
+            val spinnerAdapter = object : ArrayAdapter<String>(
                 this@User_SelectSlot_RealtimeBooking,
-                android.R.layout.simple_spinner_dropdown_item,
+                android.R.layout.simple_spinner_item, // Layout for the selected item view
                 timeOptions
-            )
+            ) {
+                // This styles the "closed" spinner view
+                override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                    val view = super.getView(position, convertView, parent) as TextView
+                    view.setTextColor(Color.WHITE) // Set text color to white
+                    view.gravity = Gravity.CENTER // Center align
+                    return view
+                }
+
+                // This styles the dropdown items
+                override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+                    val view = super.getDropDownView(position, convertView, parent) as TextView
+                    view.setBackgroundColor(Color.parseColor("#1A1A1A")) // Dark background for dropdown
+                    view.setTextColor(Color.WHITE) // White text for dropdown items
+                    view.setPadding(24, 24, 24, 24) // Add some padding
+                    return view
+                }
+            }
+            // Use the layout for the dropdown (this is used by getDropDownView)
+            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            adapter = spinnerAdapter
+            // --- END MODIFICATION ---
             visibility = if (isAvailable) Spinner.VISIBLE else Spinner.GONE
         }
 
@@ -152,7 +202,9 @@ class User_SelectSlot_RealtimeBooking : AppCompatActivity() {
             val firstRate = sortedRates.values.firstOrNull() ?: 0.0
             text = "Price: RM${String.format("%.2f", firstRate)}"
             textSize = 14f
-            setTextColor(Color.DKGRAY)
+            // --- MODIFIED ---
+            setTextColor(Color.WHITE)
+            // --- END MODIFICATION ---
             setPadding(0, 8, 0, 16)
         }
 
@@ -170,8 +222,17 @@ class User_SelectSlot_RealtimeBooking : AppCompatActivity() {
             text = if (isAvailable) "Book Now" else "Unavailable"
             textSize = 14f
             isEnabled = isAvailable
-            setBackgroundColor(if (isAvailable) Color.parseColor("#800080") else Color.LTGRAY)
+
+            // --- MODIFIED ---
+            if (isAvailable) {
+                // Use the rounded purple button drawable you created
+                background = ContextCompat.getDrawable(this@User_SelectSlot_RealtimeBooking, R.drawable.rounded_button_card)
+            } else {
+                setBackgroundColor(Color.LTGRAY)
+            }
             setTextColor(Color.WHITE)
+            // --- END MODIFICATION ---
+
             setPadding(8, 8, 8, 8)
 
             setOnClickListener {

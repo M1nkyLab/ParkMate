@@ -1,22 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  This is the styled layout for adding a new vehicle,
+  using your app's black and purple theme.
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:padding="24dp"
     android:gravity="center"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#000000">
 
+    <!-- Styled EditText using the rounded_card_background -->
     <EditText
         android:id="@+id/vehicleInput"
         android:hint="Enter New vehicle number plate"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_card_background"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#999999"
+        android:padding="16dp"
+        android:textSize="16sp"
+        android:inputType="textCapCharacters" />
 
+    <!-- Styled Button using the new rounded_button_purple -->
     <Button
         android:id="@+id/saveButton"
         android:text="Save Vehicle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="24dp"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:paddingVertical="14dp"
+        android:elevation="4dp" />
 
 </LinearLayout>

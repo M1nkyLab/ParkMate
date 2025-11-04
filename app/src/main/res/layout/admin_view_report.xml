@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  SOLUTION 2 (Classic): Using a Shape Drawable.
+  This layout uses the 'rounded_card_background.xml' drawable.
+  Make sure that file is in your 'res/drawable' folder first.
+-->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,7 +30,7 @@
         <!-- Total Users -->
         <LinearLayout
             android:orientation="vertical"
-            android:background="#1A1A1A"
+            android:background="@drawable/rounded_card_background"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
@@ -53,7 +58,7 @@
         <!-- Total Bookings -->
         <LinearLayout
             android:orientation="vertical"
-            android:background="#1A1A1A"
+            android:background="@drawable/rounded_card_background"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
@@ -82,7 +87,7 @@
         <!-- Total Revenue -->
         <LinearLayout
             android:orientation="vertical"
-            android:background="#1A1A1A"
+            android:background="@drawable/rounded_card_background"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
@@ -107,3 +112,4 @@
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
+

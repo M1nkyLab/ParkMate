@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  This file defines the rounded rectangle shape.
+  Place this file in your 'res/drawable' folder.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Set the background color of the card -->
+    <solid android:color="#1A1A1A" />
+
+    <!-- Set the radius for the corners -->
+    <corners android:radius="12dp" />
+
+</shape>
+

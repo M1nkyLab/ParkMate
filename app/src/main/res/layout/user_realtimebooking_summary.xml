@@ -18,7 +18,7 @@
     <!-- Card Section (added grey background only) -->
     <LinearLayout
         android:orientation="vertical"
-        android:background="#2E2E2E"
+        android:background="@drawable/rounded_card_background"
         android:padding="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  This drawable defines the shape and color for your purple button.
+  It uses the app_purple color defined in your res/values/colors.xml file.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Set the background color to your app's purple -->
+    <solid android:color="@color/app_purple" />
+
+    <!-- Set the corner radius (12dp) -->
+    <corners android:radius="12dp" />
+
+</shape>
+

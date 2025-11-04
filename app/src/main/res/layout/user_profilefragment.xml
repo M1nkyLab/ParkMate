@@ -11,7 +11,7 @@
     <LinearLayout
         android:id="@+id/profileCard"
         android:orientation="vertical"
-        android:background="#1A1A1A"
+        android:background="@drawable/rounded_card_background"
         android:padding="24dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

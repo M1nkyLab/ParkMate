@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  This is the layout for the Booking Summary screen,
+  styled with your rounded card and purple button.
+-->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -21,18 +25,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <!-- Card Section -->
+        <!--
+          Card Section
+          - Replaced the hardcoded background with the drawable.
+          - Removed backgroundTint and radius attributes as they
+            are now handled by the drawable.
+        -->
         <LinearLayout
             android:orientation="vertical"
-            android:background="#2E2E2E"
+            android:background="@drawable/rounded_card_background"
             android:padding="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:elevation="4dp"
-            android:clipToOutline="true"
-            android:backgroundTint="#2E2E2E"
-            android:radius="12dp">
+            android:clipToOutline="true">
 
             <!-- Parking Slot -->
             <TextView
@@ -147,14 +154,21 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
-        <!-- Confirm Button -->
+        <!--
+          Confirm Button
+          - Replaced backgroundTint with the drawable
+            for a consistent button style.
+        -->
         <Button
             android:id="@+id/confirmBookingBtn"
             android:text="Proceed to Payment"
-            android:backgroundTint="#8E44AD"
             android:textColor="#FFFFFF"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:paddingVertical="14dp"
+            android:elevation="4dp" />
 
-    </LinearLayout>
+    </LinearLayout
+        >
 </ScrollView>

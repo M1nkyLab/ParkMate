@@ -3,11 +3,13 @@ package com.example.parkmate.User
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -69,13 +71,34 @@ class User_HistoryBookingFragment : Fragment() {
             .addOnSuccessListener { result ->
                 bookingList.clear()
 
+                // --- FIX: Define date formatters ---
+                // For the date: "Nov 07, 2025"
+                val dateFormatter = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+                // For the time: "11:30 AM"
+                val timeFormatter = SimpleDateFormat("h:mm a", Locale.getDefault())
+
                 for (doc in result) {
-                    val timestamp = doc.getLong("timestamp")
-                    val dateFormatted = if (timestamp != null) {
-                        val sdf = SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault())
-                        sdf.format(Date(timestamp))
+                    // --- FIX: Read as Timestamp, not String ---
+                    val startTime = doc.getTimestamp("startTime")
+                    val endTime = doc.getTimestamp("endTime")
+
+                    // --- FIX: Format the Timestamps into a readable string ---
+                    val dateFormatted: String
+                    if (startTime != null && endTime != null) {
+                        // Convert Timestamps to regular Date objects
+                        val startDate = startTime.toDate()
+                        val endDate = endTime.toDate()
+
+                        // Format them
+                        val dateStr = dateFormatter.format(startDate)
+                        val startTimeStr = timeFormatter.format(startDate)
+                        val endTimeStr = timeFormatter.format(endDate)
+
+                        // Combine into one string
+                        dateFormatted = "$dateStr, $startTimeStr – $endTimeStr"
                     } else {
-                        doc.getString("date") ?: "Unknown"
+                        // Fallback for any old/missing data
+                        dateFormatted = "Unknown Date"
                     }
 
                     val booking = Booking(
@@ -86,18 +109,22 @@ class User_HistoryBookingFragment : Fragment() {
                         price = doc.getDouble("price") ?: 0.0,
                         status = doc.getString("status") ?: "Unknown",
                         gateAccess = doc.getBoolean("gateAccess") ?: false,
-                        date = dateFormatted
+                        date = dateFormatted // Use the new formatted string
                     )
                     bookingList.add(booking)
                 }
 
-                // Sort by newest first (timestamp or bookingId)
+                // Sort by newest (based on bookingId which is a timestamp string)
                 bookingList.sortByDescending { it.bookingId }
 
                 bookingAdapter.notifyDataSetChanged()
             }
             .addOnFailureListener { e ->
-                e.printStackTrace()
+                // --- FIX: Add better error handling ---
+                Log.e("HistoryFragment", "Error loading bookings", e)
+                if (isAdded) { // Check if fragment is still attached
+                    Toast.makeText(requireContext(), "Failed to load history: ${e.message}", Toast.LENGTH_LONG).show()
+                }
             }
     }
 

@@ -75,13 +75,23 @@
                 android:layout_marginEnd="8dp" />
 
             <Button
-                android:id="@+id/btnCancelled"
+                android:id="@+id/btnInstant"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cancelled"
+                android:text="Instant Parking"
                 android:textColor="#FFFFFF"
                 android:backgroundTint="#8E44AD"
                 android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btnReserve"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reserve"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#8E44AD"
+                android:layout_marginEnd="8dp" />
+
         </LinearLayout>
     </HorizontalScrollView>
 

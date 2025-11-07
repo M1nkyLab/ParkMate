@@ -5,9 +5,10 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import com.example.parkmate.Auth.Auth_LoginRegister
 import com.example.parkmate.R
-import com.example.parkmate.Admin.Admin_Manage_Bookings
+import com.google.firebase.auth.FirebaseAuth
 
 class Admin_MainPage : AppCompatActivity() {
 
@@ -17,53 +18,54 @@ class Admin_MainPage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.admin_mainpage)
 
-        // Initialize UI
+        // Initialize UI elements
         adminWelcome = findViewById(R.id.adminTitle)
         val logoutButton: Button = findViewById(R.id.logoutButton)
-        val manageParking: Button = findViewById(R.id.manageparking)
-        val manageUsers: Button = findViewById(R.id.manageusers)
-        val viewReport: Button = findViewById(R.id.viewreport)
-        val manageBookings: Button = findViewById(R.id.managebookings)
         val scanQRButton: Button = findViewById(R.id.scanQRButton)
 
-        // Set welcome message dynamically
-        val currentUserEmail = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.email
+        val manageSlotsCard: CardView = findViewById(R.id.btnManageSlots)
+        val viewBookingsCard: CardView = findViewById(R.id.btnViewBookings)
+        val manageUsersCard: CardView = findViewById(R.id.btnViewUsers)
+        val viewReportsCard: CardView = findViewById(R.id.btnReports)
+
+        // Display admin name from Firebase
+        val currentUserEmail = FirebaseAuth.getInstance().currentUser?.email
         val displayName = currentUserEmail?.substringBefore("@") ?: "Admin"
         adminWelcome.text = "Welcome, Admin $displayName"
 
-        // Logout button
+        // Logout functionality
         logoutButton.setOnClickListener {
-            com.google.firebase.auth.FirebaseAuth.getInstance().signOut()
+            FirebaseAuth.getInstance().signOut()
             val intent = Intent(this, Auth_LoginRegister::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         }
 
-        // Navigate to Manage Parking Page
-        manageParking.setOnClickListener {
+        // Manage Slots → Admin_Manage_ParkingSlot
+        manageSlotsCard.setOnClickListener {
             val intent = Intent(this, Admin_Manage_ParkingSlot::class.java)
             startActivity(intent)
         }
 
-        // Navigate to Manage Users Page
-        manageUsers.setOnClickListener {
-            val intent = Intent(this, Admin_ManageUser::class.java)
-            startActivity(intent)
-        }
-
-        // Navigate to View Report Page
-        viewReport.setOnClickListener {
-            val intent = Intent(this, Admin_View_Report::class.java)
-            startActivity(intent)
-        }
-
-        // navigate to the manage booking page
-        manageBookings.setOnClickListener {
+        // View Bookings → Admin_Manage_Bookings
+        viewBookingsCard.setOnClickListener {
             val intent = Intent(this, Admin_Manage_Bookings::class.java)
             startActivity(intent)
         }
 
-        // Navigate to Scan QR Page
+        // Manage Users → Admin_ManageUser
+        manageUsersCard.setOnClickListener {
+            val intent = Intent(this, Admin_ManageUser::class.java)
+            startActivity(intent)
+        }
+
+        // View Reports → Admin_View_Report
+        viewReportsCard.setOnClickListener {
+            val intent = Intent(this, Admin_View_Report::class.java)
+            startActivity(intent)
+        }
+
+        // Scan QR → Admin_ScanQr
         scanQRButton.setOnClickListener {
             val intent = Intent(this, Admin_ScanQr::class.java)
             startActivity(intent)

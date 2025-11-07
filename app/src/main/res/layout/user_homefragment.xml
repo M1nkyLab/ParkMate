@@ -1,72 +1,208 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center"
     android:padding="24dp"
     android:background="#000000">
 
-    <!-- Welcome Header -->
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="ParkMate Logo"
+        android:src="@drawable/parkmate_logo" />
+
     <TextView
-        android:id="@+id/welcomeText"
+        android:id="@+id/welcomeTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:text="Welcome, "
+        android:text="Welcome back,"
         android:textSize="28sp"
-        android:textStyle="bold"
         android:textColor="#FFFFFF"
         android:gravity="center_horizontal" />
 
-    <!-- Real-time Booking Widget -->
+    <TextView
+        android:id="@+id/welcomeUserName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:text="User Name"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:gravity="center_horizontal"
+        tools:text="Haziq" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="12dp"
+        android:text="Select a booking method"
+        android:textSize="16sp"
+        android:textColor="#B3FFFFFF" />
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardRealtimeBooking"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="140dp" android:layout_marginBottom="16dp"
         android:clickable="true"
         android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
         app:cardCornerRadius="16dp"
         app:cardElevation="8dp"
-        app:cardBackgroundColor="#1A1A1A">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/realtimebooking"
+        <ImageView
             android:layout_width="match_parent"
-            android:layout_height="106dp"
-            android:gravity="start|center_vertical"
-            android:padding="20dp"
-            android:text="Real-time Availability and Booking"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF" />
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/parkingbyavailable"
+            android:alpha="0.2"
+            android:contentDescription="Real-time parking background" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingVertical="20dp"
+            android:paddingHorizontal="16dp">
+
+            <ImageView
+                android:id="@+id/iconRealtime"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_realtime"
+                android:contentDescription="Real-time booking"
+                app:tint="#FFFFFF"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintStart_toEndOf="@id/iconRealtime"
+                app:layout_constraintEnd_toStartOf="@id/chevronRealtime"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <TextView
+                    android:id="@+id/realtimebooking"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Instant Parking"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF" />
+
+                <TextView
+                    android:id="@+id/realtimeDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Find and book a spot right now"
+                    android:textSize="14sp"
+                    android:textColor="#CCCCCC" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/chevronRealtime"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="Go"
+                android:src="@drawable/ic_chevron_right"
+                app:tint="#80FFFFFF"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Advance Booking Widget -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardAdvanceBooking"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_height="140dp" android:layout_marginBottom="16dp"
         android:clickable="true"
         android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
         app:cardCornerRadius="16dp"
         app:cardElevation="8dp"
-        app:cardBackgroundColor="#1A1A1A">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/bydatebook"
+        <ImageView
             android:layout_width="match_parent"
-            android:layout_height="113dp"
-            android:gravity="start|center_vertical"
-            android:padding="20dp"
-            android:text="Advance Booking (By Date)"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF" />
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/parkingbyadvance"
+            android:alpha="0.2"
+            android:contentDescription="Advance parking background" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingVertical="20dp"
+            android:paddingHorizontal="16dp">
+
+            <ImageView
+                android:id="@+id/iconAdvance"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_advance"
+                android:contentDescription="Advance booking"
+                app:tint="#FFFFFF"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintStart_toEndOf="@id/iconAdvance"
+                app:layout_constraintEnd_toStartOf="@id/chevronAdvance"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <TextView
+                    android:id="@+id/bydatebook"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Reserve in Advance"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF" />
+
+                <TextView
+                    android:id="@+id/advanceDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Plan your visit and reserve a spot"
+                    android:textSize="14sp"
+                    android:textColor="#CCCCCC" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/chevronAdvance"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_chevron_right"
+                android:contentDescription="Go"
+                app:tint="#80FFFFFF"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>

@@ -1,12 +1,12 @@
 package com.example.parkmate.User
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
-import android.content.Intent
 import androidx.fragment.app.Fragment
 import com.example.parkmate.R
 import com.example.parkmate.User.AdvanceBooking.User_AdvanceBooking
@@ -17,11 +17,12 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 /**
  * Fragment responsible for displaying the user's home dashboard.
- * It shows a welcome message fetched from Firestore and provides access to booking options.
+ * It shows a personalized welcome message and provides access to booking options.
  */
 class User_HomeFragment : Fragment() {
 
-    private lateinit var welcomeText: TextView
+    private lateinit var welcomeTitle: TextView
+    private lateinit var welcomeUserName: TextView
     private lateinit var db: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
 
@@ -36,7 +37,8 @@ class User_HomeFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
 
         // UI references
-        welcomeText = view.findViewById(R.id.welcomeText)
+        welcomeTitle = view.findViewById(R.id.welcomeTitle)
+        welcomeUserName = view.findViewById(R.id.welcomeUserName)
         val realtimeCard: MaterialCardView = view.findViewById(R.id.cardRealtimeBooking)
         val advanceCard: MaterialCardView = view.findViewById(R.id.cardAdvanceBooking)
 
@@ -72,18 +74,18 @@ class User_HomeFragment : Fragment() {
                 .addOnSuccessListener { document ->
                     if (document != null && document.exists()) {
                         val username = document.getString("username") ?: "User"
-                        welcomeText.text = "Welcome, $username"
+                        welcomeUserName.text = username
                     } else {
-                        welcomeText.text = "Welcome, User"
+                        welcomeUserName.text = "User"
                         Toast.makeText(requireContext(), "User data not found.", Toast.LENGTH_SHORT).show()
                     }
                 }
                 .addOnFailureListener { e ->
-                    welcomeText.text = "Welcome, User"
+                    welcomeUserName.text = "User"
                     Toast.makeText(requireContext(), "Failed to load user: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
         } else {
-            welcomeText.text = "Welcome, Guest"
+            welcomeUserName.text = "Guest"
         }
     }
 }

@@ -1,8 +1,10 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:scrollbars="none">
 
     <LinearLayout
         android:orientation="vertical"
@@ -14,7 +16,7 @@
             android:id="@+id/adminTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="23dp"
+            android:layout_marginTop="24dp"
             android:text="Admin Dashboard"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -22,111 +24,149 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="24dp" />
 
-        <!-- Cards (One by One) -->
-        <!-- Manage Slots -->
-        <LinearLayout
-            android:id="@+id/btnManageSlots"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:background="#1A1A1A"
-            android:padding="20dp"
+        <!-- Grid layout for main cards -->
+        <GridLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:elevation="8dp"
-            android:layout_marginBottom="16dp"
-            android:clipToOutline="true">
+            android:layout_height="wrap_content"
+            android:columnCount="2"
+            android:rowCount="2"
+            android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:tint="#FFFFFF" />
-
-            <Button
-                android:id="@+id/manageparking"
-                android:layout_width="match_parent"
+            <!-- Manage Slots Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/btnManageSlots"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="View Parking"
-                android:backgroundTint="#8E44AD"
-                android:textColor="#FFFFFF" />
-        </LinearLayout>
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                app:cardBackgroundColor="#1A1A1A"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
 
-        <!-- View Bookings -->
-        <LinearLayout
-            android:id="@+id/btnViewBookings"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:background="#1A1A1A"
-            android:padding="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:elevation="8dp"
-            android:layout_marginBottom="16dp">
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:padding="20dp"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp">
 
-            <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:tint="#FFFFFF" />
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/icon_parking"
+                        app:tint="#8E44AD"
+                        android:layout_marginBottom="12dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Manage Slots"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-            <Button
-                android:id="@+id/managebookings"
-                android:layout_width="match_parent"
+            <!-- View Bookings Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/btnViewBookings"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="View Booking"
-                android:backgroundTint="#8E44AD"
-                android:textColor="#FFFFFF" />
-        </LinearLayout>
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                app:cardBackgroundColor="#1A1A1A"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
 
-        <!-- View Users -->
-        <LinearLayout
-            android:id="@+id/btnViewUsers"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:background="#1A1A1A"
-            android:padding="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:elevation="8dp"
-            android:layout_marginBottom="16dp">
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:padding="20dp"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp">
 
-            <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:tint="#FFFFFF" />
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/icon_bookings"
+                        app:tint="#8E44AD"
+                        android:layout_marginBottom="12dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="View Bookings"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-            <Button
-                android:id="@+id/manageusers"
-                android:layout_width="match_parent"
+            <!-- Manage Users Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/btnViewUsers"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Manage Users"
-                android:backgroundTint="#8E44AD"
-                android:textColor="#FFFFFF" />
-        </LinearLayout>
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                app:cardBackgroundColor="#1A1A1A"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
 
-        <!-- Reports -->
-        <LinearLayout
-            android:id="@+id/btnReports"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:background="#1A1A1A"
-            android:padding="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:elevation="8dp"
-            android:layout_marginBottom="16dp">
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:padding="20dp"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp">
 
-            <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:tint="#FFFFFF" />
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/person"
+                        app:tint="#8E44AD"
+                        android:layout_marginBottom="12dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Manage Users"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-            <Button
-                android:id="@+id/viewreport"
-                android:layout_width="match_parent"
+            <!-- View Reports Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/btnReports"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="View Reports"
-                android:backgroundTint="#8E44AD"
-                android:textColor="#FFFFFF" />
-        </LinearLayout>
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                app:cardBackgroundColor="#1A1A1A"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:padding="20dp"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/icon_reports"
+                        app:tint="#8E44AD"
+                        android:layout_marginBottom="12dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="View Reports"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </GridLayout>
+
+        <!-- Action Buttons -->
 
         <!-- Scan QR Button -->
         <Button
@@ -134,7 +174,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Scan QR"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp"
+            android:paddingVertical="14dp"
+            android:drawableTint="#FFFFFF"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:gravity="center"
             android:backgroundTint="#8E44AD"
             android:textColor="#FFFFFF" />
 
@@ -143,11 +189,16 @@
             android:id="@+id/logoutButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="8dp"
+            android:paddingVertical="14dp"
             android:text="Log Out"
-            android:backgroundTint="#8E44AD"
+            android:drawableStart="@drawable/ic_logout"
+            android:drawableTint="#FFFFFF"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:gravity="center"
+            android:backgroundTint="#E74C3C"
             android:textColor="#FFFFFF" />
 
     </LinearLayout>
-
 </ScrollView>

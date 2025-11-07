@@ -14,7 +14,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.NumberFormat
 import java.util.Locale
-// --- NEW: We need to import Timestamp and Calendar to save the times ---
 import com.google.firebase.Timestamp
 import java.util.Calendar
 import java.text.SimpleDateFormat
@@ -38,7 +37,7 @@ class User_Payment_AdvanceBooking : AppCompatActivity() {
     private var selectedTime: String = "" // This is the display string "14:00 - 16:00"
     private var numberPlate: String = ""
 
-    // --- NEW: We need to store the raw data to calculate the timestamps ---
+    // We need to store the raw data to calculate the timestamps
     private lateinit var selectedDate: String
     private lateinit var selectedStartTime: String
     private var durationHours: Int = 0
@@ -73,7 +72,7 @@ class User_Payment_AdvanceBooking : AppCompatActivity() {
         numberPlate = intent.getStringExtra("numberPlate") ?: "N/A"
         price = intent.getDoubleExtra("price", 0.0)
 
-        // --- FIXED: Get the raw date/time data from the summary screen ---
+        // Get the raw date/time data from the summary screen
         selectedDate = intent.getStringExtra("selectedDate") ?: ""
         selectedStartTime = intent.getStringExtra("selectedStartTime") ?: ""
         durationHours = intent.getIntExtra("durationHours", 0)
@@ -145,16 +144,15 @@ class User_Payment_AdvanceBooking : AppCompatActivity() {
 
         Handler(Looper.getMainLooper()).postDelayed({
             progressDialog.dismiss()
-            // We call saveBookingToFirestore first, which then calls showSuccessDialog
             saveBookingToFirestore()
         }, 2000)
     }
 
     private fun saveBookingToFirestore() {
-        val bookingId = System.currentTimeMillis().toString() // Use a unique ID
+        val bookingId = System.currentTimeMillis().toString()
         val userEmail = auth.currentUser?.email ?: "Unknown Email"
 
-        // --- FIXED: Calculate Start and End Timestamps ---
+        // Calculate Start and End Timestamps
         var startTime: Timestamp? = null
         var endTime: Timestamp? = null
 
@@ -173,43 +171,35 @@ class User_Payment_AdvanceBooking : AppCompatActivity() {
                     endTime = Timestamp(calendar.time) // This is the endTime
                 }
             } catch (e: Exception) {
-                // Failed to parse date, will save null
                 Toast.makeText(this, "Error parsing date: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
-        // --- END FIXED ---
 
         val bookingData = hashMapOf(
             "bookingId" to bookingId,
             "userEmail" to userEmail,
             "slotName" to slotName,
             "selectedTime" to selectedTime, // This is the display string "14:00 - 16:00"
-            "vehicleNumber" to numberPlate, // Use consistent field name
+            "vehicleNumber" to numberPlate,
             "price" to price,
             "status" to "Booked",
             "gateAccess" to false,
-
-            // --- ADDED YOUR REQUESTED FIELDS ---
-            "bookingType" to "Advance", // This is the new line
-            "durationHours" to durationHours.toLong(), // Save as a number
-            "startTime" to startTime, // This is the SCHEDULED start time
-            "endTime" to endTime      // This is the SCHEDULED end time
+            "bookingType" to "Instant Parking", // Use "Advance"
+            "durationHours" to durationHours.toLong(),
+            "startTime" to startTime, // The SCHEDULED start time
+            "endTime" to endTime      // The SCHEDULED end time
         )
 
         // --- CRITICAL FIX: Save to the root "bookings" collection ---
         db.collection("bookings").document(bookingId)
             .set(bookingData)
             .addOnSuccessListener {
-                // Update the slot status
-                db.collection("parking_slots").document(slotName)
-                    .update("status", "Booked")
-                    .addOnSuccessListener {
-                        // Pass the unique bookingId to the next screen
-                        showSuccessDialog(bookingId)
-                    }
-                    .addOnFailureListener { e ->
-                        Toast.makeText(this, "Failed to update slot: ${e.message}", Toast.LENGTH_SHORT).show()
-                    }
+                // --- CRITICAL FIX: DO NOT UPDATE THE PARKING SLOT STATUS ---
+                // An advance booking should NOT make the slot "Booked" today.
+                // The slot remains "Available" until the user scans at the gate.
+
+                // Pass the unique bookingId to the next screen
+                showSuccessDialog(bookingId)
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Failed to save booking: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -223,7 +213,7 @@ class User_Payment_AdvanceBooking : AppCompatActivity() {
             .setPositiveButton("OK") { dialog, _ ->
                 dialog.dismiss()
                 val intent = Intent(this, User_CompletePayment_AdvanceBooking::class.java)
-                // --- FIXED: PASS THE REAL BOOKING ID ---
+                // Pass the bookingId so the next screen can load it
                 intent.putExtra("bookingId", bookingId)
                 startActivity(intent)
                 finish()
@@ -232,4 +222,3 @@ class User_Payment_AdvanceBooking : AppCompatActivity() {
             .show()
     }
 }
-

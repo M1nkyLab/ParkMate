@@ -8,6 +8,7 @@
     android:layout_marginBottom="10dp"
     android:elevation="4dp">
 
+    <!-- Booking ID -->
     <TextView
         android:id="@+id/textBookingId"
         android:layout_width="wrap_content"
@@ -17,6 +18,7 @@
         android:textStyle="bold"
         android:textSize="16sp" />
 
+    <!-- Plate Number -->
     <TextView
         android:id="@+id/textPlateNumber"
         android:layout_width="wrap_content"
@@ -26,6 +28,17 @@
         android:textSize="14sp"
         android:layout_marginTop="4dp" />
 
+    <!-- Booking Type -->
+    <TextView
+        android:id="@+id/textBookingType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Type: Realtime"
+        android:textColor="#CCCCCC"
+        android:textSize="14sp"
+        android:layout_marginTop="2dp" />
+
+    <!-- Slot -->
     <TextView
         android:id="@+id/textSlot"
         android:layout_width="wrap_content"
@@ -35,6 +48,7 @@
         android:textSize="14sp"
         android:layout_marginTop="2dp" />
 
+    <!-- Time -->
     <TextView
         android:id="@+id/textTime"
         android:layout_width="wrap_content"
@@ -44,6 +58,7 @@
         android:textSize="13sp"
         android:layout_marginTop="2dp" />
 
+    <!-- Status -->
     <TextView
         android:id="@+id/textStatus"
         android:layout_width="wrap_content"

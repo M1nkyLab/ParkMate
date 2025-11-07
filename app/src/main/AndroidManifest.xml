@@ -101,6 +101,11 @@
         <activity android:name=".Admin.Admin_ScanQr"
             android:exported="true" />
 
+        <activity android:name=".Admin.Admin_Edit_User"
+            android:exported="true" />
+
+
+
     </application>
 
 </manifest>

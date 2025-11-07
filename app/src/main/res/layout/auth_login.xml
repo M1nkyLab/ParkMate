@@ -12,6 +12,7 @@
         android:id="@+id/loginLogo"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:src="@drawable/parkmate_logo"
         android:layout_marginBottom="20dp"
         android:contentDescription="App Logo" />
 

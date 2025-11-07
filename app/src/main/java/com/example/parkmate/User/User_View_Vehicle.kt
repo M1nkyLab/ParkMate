@@ -9,7 +9,7 @@ import com.example.parkmate.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-class User_Show_Vehicle : AppCompatActivity() {
+class User_View_Vehicle : AppCompatActivity() {
 
     private lateinit var listView: ListView
     private lateinit var addButton: Button

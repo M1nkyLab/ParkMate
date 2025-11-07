@@ -51,19 +51,19 @@
         <activity android:name=".User.User_AddNew_Vehicle"
             android:exported="true" />
 
-        <activity android:name=".User.User_Show_Vehicle"
+        <activity android:name=".User.User_View_Vehicle"
             android:exported="true" />
 
         <activity android:name=".User.AdvanceBooking.User_AdvanceBooking"
             android:exported="true" />
 
-        <activity android:name=".User.RealtimeBooking.User_SelectSlot_RealtimeBooking"
+        <activity android:name=".User.InstantBooking.User_SelectSlot_InstantBooking"
             android:exported="true" />
 
-        <activity android:name=".User.RealtimeBooking.User_RealtimeBooking_Summary"
+        <activity android:name=".User.InstantBooking.User_Summary_InstantBooking"
             android:exported="true" />
 
-        <activity android:name=".User.AdvanceBooking.User_AdvanceBooking_Summary"
+        <activity android:name=".User.AdvanceBooking.User_Summary_AdvanceBooking"
             android:exported="true" />
 
         <activity android:name=".User.AdvanceBooking.User_Payment_AdvanceBooking"
@@ -72,10 +72,10 @@
         <activity android:name=".User.AdvanceBooking.User_CompletePayment_AdvanceBooking"
             android:exported="true" />
 
-        <activity android:name=".User.RealtimeBooking.User_CompletePayment_RealtimeBooking"
+        <activity android:name=".User.InstantBooking.User_CompletePayment_InstantBooking"
             android:exported="true" />
 
-        <activity android:name=".User.RealtimeBooking.User_Payment_RealtimeBooking"
+        <activity android:name=".User.InstantBooking.User_Payment_InstantBooking"
             android:exported="true" />
 
 
@@ -89,7 +89,7 @@
         <activity android:name=".Admin.Admin_Add_NewSlot"
             android:exported="true" />
 
-        <activity android:name=".Admin.Admin_ManageUser"
+        <activity android:name=".Admin.Admin_Manage_User"
             android:exported="true" />
 
         <activity android:name=".Admin.Admin_View_Report"

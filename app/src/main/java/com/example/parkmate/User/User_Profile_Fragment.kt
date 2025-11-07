@@ -14,7 +14,7 @@ import com.example.parkmate.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-class User_ProfileFragment : Fragment() {
+class User_Profile_Fragment : Fragment() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
@@ -28,7 +28,7 @@ class User_ProfileFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.user_profilefragment, container, false)
+        val view = inflater.inflate(R.layout.user_profile_fragment, container, false)
 
         // 🔹 Firebase setup
         auth = FirebaseAuth.getInstance()
@@ -54,7 +54,7 @@ class User_ProfileFragment : Fragment() {
 
         // 🔹 Add New Vehicle button click
         addVehicleButton.setOnClickListener {
-            val intent = Intent(requireContext(), User_Show_Vehicle::class.java)
+            val intent = Intent(requireContext(), User_View_Vehicle::class.java)
             startActivity(intent)
         }
 

@@ -1,4 +1,4 @@
-package com.example.parkmate.User.RealtimeBooking
+package com.example.parkmate.User.InstantBooking
 
 import android.content.Intent
 import android.graphics.Color
@@ -14,7 +14,7 @@ import com.example.parkmate.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-class User_SelectSlot_RealtimeBooking : AppCompatActivity() {
+class User_SelectSlot_InstantBooking : AppCompatActivity() {
 
     private lateinit var gridSlots: GridLayout
     private lateinit var plateSpinner: Spinner
@@ -28,7 +28,7 @@ class User_SelectSlot_RealtimeBooking : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.user_select_realtimebooking)
+        setContentView(R.layout.user_select_instantbooking)
 
         plateSpinner = findViewById(R.id.plateSpinner)
         gridSlots = findViewById(R.id.gridSlots)
@@ -170,7 +170,7 @@ class User_SelectSlot_RealtimeBooking : AppCompatActivity() {
             // --- MODIFIED ---
             // Create a custom adapter to style the spinner for the dark theme
             val spinnerAdapter = object : ArrayAdapter<String>(
-                this@User_SelectSlot_RealtimeBooking,
+                this@User_SelectSlot_InstantBooking,
                 android.R.layout.simple_spinner_item, // Layout for the selected item view
                 timeOptions
             ) {
@@ -226,7 +226,7 @@ class User_SelectSlot_RealtimeBooking : AppCompatActivity() {
             // --- MODIFIED ---
             if (isAvailable) {
                 // Use the rounded purple button drawable you created
-                background = ContextCompat.getDrawable(this@User_SelectSlot_RealtimeBooking, R.drawable.rounded_button_card)
+                background = ContextCompat.getDrawable(this@User_SelectSlot_InstantBooking, R.drawable.rounded_button_card)
             } else {
                 setBackgroundColor(Color.LTGRAY)
             }
@@ -238,7 +238,7 @@ class User_SelectSlot_RealtimeBooking : AppCompatActivity() {
             setOnClickListener {
                 val selectedPlate = plateSpinner.selectedItem.toString()
                 if (selectedPlate == "No vehicles found") {
-                    Toast.makeText(this@User_SelectSlot_RealtimeBooking, "Please add a vehicle first", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@User_SelectSlot_InstantBooking, "Please add a vehicle first", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
 
@@ -246,7 +246,7 @@ class User_SelectSlot_RealtimeBooking : AppCompatActivity() {
                 val selectedHourKey = sortedRates.keys.elementAt(selectedIndex)
                 val totalPrice = sortedRates[selectedHourKey] ?: 0.0
 
-                val intent = Intent(this@User_SelectSlot_RealtimeBooking, User_RealtimeBooking_Summary::class.java)
+                val intent = Intent(this@User_SelectSlot_InstantBooking, User_Summary_InstantBooking::class.java)
                 intent.putExtra("slotName", slotName)
                 intent.putExtra("selectedPlate", selectedPlate)
                 intent.putExtra("selectedTime", "$selectedHourKey Hour")

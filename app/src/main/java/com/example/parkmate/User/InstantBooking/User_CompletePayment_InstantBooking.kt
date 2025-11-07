@@ -1,4 +1,4 @@
-package com.example.parkmate.User.RealtimeBooking
+package com.example.parkmate.User.InstantBooking
 
 import android.content.Intent
 import android.graphics.Bitmap
@@ -10,7 +10,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.parkmate.R
 import com.example.parkmate.User.User_Home
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
@@ -18,7 +17,7 @@ import com.google.zxing.qrcode.QRCodeWriter
 import java.text.NumberFormat
 import java.util.Locale
 
-class User_CompletePayment_RealtimeBooking : AppCompatActivity() {
+class User_CompletePayment_InstantBooking : AppCompatActivity() {
 
     private lateinit var db: FirebaseFirestore
     private lateinit var slotInfo: TextView

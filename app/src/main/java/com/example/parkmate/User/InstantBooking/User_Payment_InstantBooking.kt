@@ -1,4 +1,4 @@
-package com.example.parkmate.User.RealtimeBooking
+package com.example.parkmate.User.InstantBooking
 
 import android.app.ProgressDialog
 import android.content.Intent
@@ -16,9 +16,8 @@ import java.text.NumberFormat
 import java.util.Locale
 import com.google.firebase.Timestamp
 import java.util.Calendar
-import java.text.SimpleDateFormat
 
-class User_Payment_RealtimeBooking : AppCompatActivity() {
+class User_Payment_InstantBooking : AppCompatActivity() {
 
     // ... (Your existing variable declarations are fine) ...
     private lateinit var tvPaymentSlot: TextView
@@ -66,7 +65,7 @@ class User_Payment_RealtimeBooking : AppCompatActivity() {
         etCvv = findViewById(R.id.etCvv)
     }
 
-    // In User_Payment_RealtimeBooking.kt (File 9)
+    // In User_Payment_InstantBooking.kt (File 9)
     private fun getIntentData() {
         // Original data
         slotName = intent.getStringExtra("slotName") ?: "N/A"
@@ -154,7 +153,7 @@ class User_Payment_RealtimeBooking : AppCompatActivity() {
         }, 2000)
     }
 
-    // In User_Payment_RealtimeBooking.kt (File 9)
+    // In User_Payment_InstantBooking.kt (File 9)
     private fun saveBookingToFirestore() {
         val bookingId = System.currentTimeMillis().toString()
         val userEmail = auth.currentUser?.email ?: "Unknown Email"
@@ -215,7 +214,7 @@ class User_Payment_RealtimeBooking : AppCompatActivity() {
             .setMessage("Your booking has been saved to the system.")
             .setPositiveButton("OK") { dialog, _ ->
                 dialog.dismiss()
-                val intent = Intent(this, User_CompletePayment_RealtimeBooking::class.java)
+                val intent = Intent(this, User_CompletePayment_InstantBooking::class.java)
                 // Pass the bookingId so the next screen can load it
                 intent.putExtra("bookingId", bookingId)
                 startActivity(intent)

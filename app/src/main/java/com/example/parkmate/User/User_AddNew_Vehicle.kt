@@ -16,7 +16,7 @@ class User_AddNew_Vehicle : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.user_addnewvehicle)
+        setContentView(R.layout.user_add_newvehicle)
 
         vehicleInput = findViewById(R.id.vehicleInput)
         saveButton = findViewById(R.id.saveButton)

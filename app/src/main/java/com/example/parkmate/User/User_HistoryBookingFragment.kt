@@ -46,7 +46,7 @@ class User_HistoryBookingFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.user_historyfragment, container, false)
+        val view = inflater.inflate(R.layout.user_history_fragment, container, false)
 
         recyclerView = view.findViewById(R.id.historyRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -143,7 +143,7 @@ class User_HistoryBookingFragment : Fragment() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookingViewHolder {
             val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_booking_history, parent, false)
+                .inflate(R.layout.user_item_booking_history, parent, false)
             return BookingViewHolder(view)
         }
 

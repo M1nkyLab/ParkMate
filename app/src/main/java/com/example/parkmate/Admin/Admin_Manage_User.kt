@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.parkmate.R
 import com.google.firebase.firestore.FirebaseFirestore
 
-class Admin_ManageUser : AppCompatActivity() {
+class Admin_Manage_User : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: UserAdapter

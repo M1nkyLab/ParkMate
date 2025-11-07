@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.parkmate.R
 
-class User_AdvanceBooking_Summary : AppCompatActivity() {
+class User_Summary_AdvanceBooking : AppCompatActivity() {
 
     private lateinit var summarySlot: TextView
     private lateinit var summaryPlate: TextView

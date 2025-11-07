@@ -370,7 +370,7 @@ class User_AdvanceBooking : AppCompatActivity() {
         }
 
         // Navigate to Summary page
-        val intent = Intent(this, User_AdvanceBooking_Summary::class.java)
+        val intent = Intent(this, User_Summary_AdvanceBooking::class.java)
         intent.putExtra("plate", plate)
         intent.putExtra("slot", slot)
         intent.putExtra("date", date)

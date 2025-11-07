@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.parkmate.R
 import com.example.parkmate.User.AdvanceBooking.User_AdvanceBooking
-import com.example.parkmate.User.RealtimeBooking.User_SelectSlot_RealtimeBooking
+import com.example.parkmate.User.InstantBooking.User_SelectSlot_InstantBooking
 import com.google.android.material.card.MaterialCardView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -19,7 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore
  * Fragment responsible for displaying the user's home dashboard.
  * It shows a personalized welcome message and provides access to booking options.
  */
-class User_HomeFragment : Fragment() {
+class User_Home_Fragment : Fragment() {
 
     private lateinit var welcomeTitle: TextView
     private lateinit var welcomeUserName: TextView
@@ -30,7 +30,7 @@ class User_HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.user_homefragment, container, false)
+        val view = inflater.inflate(R.layout.user_home_fragment, container, false)
 
         // Initialize Firebase
         db = FirebaseFirestore.getInstance()
@@ -47,7 +47,7 @@ class User_HomeFragment : Fragment() {
 
         // Real-time booking card click
         realtimeCard.setOnClickListener {
-            val intent = Intent(requireContext(), User_SelectSlot_RealtimeBooking::class.java)
+            val intent = Intent(requireContext(), User_SelectSlot_InstantBooking::class.java)
             startActivity(intent)
         }
 

@@ -1,7 +1,6 @@
 package com.example.parkmate.Admin
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,6 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
-import com.example.parkmate.Admin.ParkingSlot
 import com.example.parkmate.R
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -29,7 +27,7 @@ class ParkingSlotAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SlotViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_parking_slot, parent, false)
+            .inflate(R.layout.admin_item_parking_slot, parent, false)
         return SlotViewHolder(view)
     }
 

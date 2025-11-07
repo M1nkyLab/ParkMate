@@ -53,9 +53,9 @@ class Admin_MainPage : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Manage Users → Admin_ManageUser
+        // Manage Users → Admin_Manage_User
         manageUsersCard.setOnClickListener {
-            val intent = Intent(this, Admin_ManageUser::class.java)
+            val intent = Intent(this, Admin_Manage_User::class.java)
             startActivity(intent)
         }
 

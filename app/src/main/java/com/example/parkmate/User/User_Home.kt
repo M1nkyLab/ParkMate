@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.example.parkmate.User.User_VehicleActivity
 import com.example.parkmate.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -17,18 +16,18 @@ class User_Home : AppCompatActivity() {
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
 
-        // Load default fragment (User_HomeFragment)
-        loadFragment(User_HomeFragment())
+        // Load default fragment (User_Home_Fragment)
+        loadFragment(User_Home_Fragment())
 
         // Handle navigation item selection
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> {
-                    loadFragment(User_HomeFragment())
+                    loadFragment(User_Home_Fragment())
                     true
                 }
                 R.id.nav_profile -> {
-                    loadFragment(User_ProfileFragment())
+                    loadFragment(User_Profile_Fragment())
                     true
                 }
                 R.id.nav_booking -> {
@@ -51,7 +50,7 @@ class User_AddNewVehicle : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.user_addnewvehicle) // your layout
+        setContentView(R.layout.user_add_newvehicle) // your layout
 
         // Navigate to activity vehicle when button is clicked
         val button = findViewById<Button>(R.id.saveButton)

@@ -26,8 +26,9 @@ class Admin_Manage_Bookings : AppCompatActivity() {
     private lateinit var recyclerBookings: RecyclerView
     private lateinit var inputSearchBooking: EditText
     private lateinit var btnAll: Button
-    private lateinit var btnActive: Button
-    private lateinit var btnCompleted: Button
+    private lateinit var btnBooked: Button
+    private lateinit var btnParked: Button
+    private lateinit var btnExited: Button
     private lateinit var btnInstant: Button
     private lateinit var btnReserve: Button
 
@@ -48,8 +49,9 @@ class Admin_Manage_Bookings : AppCompatActivity() {
         recyclerBookings = findViewById(R.id.recyclerBookings)
         inputSearchBooking = findViewById(R.id.inputSearchBooking)
         btnAll = findViewById(R.id.btnAll)
-        btnActive = findViewById(R.id.btnActive)
-        btnCompleted = findViewById(R.id.btnCompleted)
+        btnBooked = findViewById(R.id.btnBooked)
+        btnParked = findViewById(R.id.btnParked)
+        btnExited = findViewById(R.id.btnExited)
         btnInstant = findViewById(R.id.btnInstant)
         btnReserve = findViewById(R.id.btnReserve)
 
@@ -97,21 +99,31 @@ class Admin_Manage_Bookings : AppCompatActivity() {
             updateButtonStyles(btnAll)
             filterAndSearchBookings()
         }
-        btnActive.setOnClickListener {
-            currentStatusFilter = "Active"
-            updateButtonStyles(btnActive)
+
+        btnBooked.setOnClickListener {
+            currentStatusFilter = "Booked"
+            updateButtonStyles(btnBooked)
             filterAndSearchBookings()
         }
-        btnCompleted.setOnClickListener {
-            currentStatusFilter = "Completed"
-            updateButtonStyles(btnCompleted)
+
+        btnParked.setOnClickListener {
+            currentStatusFilter = "Parked"
+            updateButtonStyles(btnParked)
             filterAndSearchBookings()
         }
+
+        btnExited.setOnClickListener {
+            currentStatusFilter = "Exited"
+            updateButtonStyles(btnExited)
+            filterAndSearchBookings()
+        }
+
         btnInstant.setOnClickListener {
-            currentStatusFilter = "Instant Booking"
+            currentStatusFilter = "Instant" // not "Instant Booking"
             updateButtonStyles(btnInstant)
             filterAndSearchBookings()
         }
+
         btnReserve.setOnClickListener {
             currentStatusFilter = "Reserve"
             updateButtonStyles(btnReserve)
@@ -152,7 +164,7 @@ class Admin_Manage_Bookings : AppCompatActivity() {
     }
 
     private fun updateButtonStyles(activeButton: Button) {
-        val allButtons = listOf(btnAll, btnActive, btnCompleted, btnInstant, btnReserve)
+        val allButtons = listOf(btnAll, btnBooked, btnParked, btnExited, btnInstant, btnReserve)
         for (button in allButtons) {
             if (button == activeButton) {
                 button.setBackgroundColor(Color.parseColor("#FFFFFF"))
@@ -222,26 +234,21 @@ class BookingAdapter(
                 else -> textBookingType.setTextColor(Color.parseColor("#CCCCCC"))
             }
 
-            // ✅ Time display based on type
-            if (booking.bookingType.equals("Reserve", ignoreCase = true)) {
-                val startTime = booking.startTime?.toDate()?.let { formatter.format(it) } ?: "N/A"
-                val endTime = booking.endTime?.toDate()?.let { formatter.format(it) } ?: "N/A"
-                textTime.text = "$startTime  →  $endTime"
+            // ✅ Time display
+            if (booking.startTime != null && booking.endTime != null) {
+                val startTime = formatter.format(booking.startTime.toDate())
+                val endTime = formatter.format(booking.endTime.toDate())
+                textTime.text = "$startTime → $endTime"
             } else {
-                if (booking.startTime != null) {
-                    val startTime = formatter.format(booking.startTime!!.toDate())
-                    textTime.text = "Started: $startTime (${booking.selectedTime})"
-                } else {
-                    textTime.text = "Duration: ${booking.selectedTime} (Not started)"
-                }
+                textTime.text = "Duration: ${booking.selectedTime}"
             }
 
-            // ✅ Status color
+            // ✅ Status color update
             when (booking.status.lowercase(Locale.ROOT)) {
-                "active" -> textStatus.setTextColor(Color.parseColor("#2ECC71"))
-                "booked" -> textStatus.setTextColor(Color.parseColor("#3498DB"))
-                "completed" -> textStatus.setTextColor(Color.parseColor("#95A5A6"))
-                "expired", "cancelled" -> textStatus.setTextColor(Color.parseColor("#E74C3C"))
+                "booked" -> textStatus.setTextColor(Color.parseColor("#3498DB")) // Blue
+                "parked" -> textStatus.setTextColor(Color.parseColor("#2ECC71")) // Green
+                "exited" -> textStatus.setTextColor(Color.parseColor("#F1C40F")) // Yellow
+                "expired", "cancelled" -> textStatus.setTextColor(Color.parseColor("#E74C3C")) // Red
                 else -> textStatus.setTextColor(Color.parseColor("#FFFFFF"))
             }
         }

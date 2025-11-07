@@ -325,7 +325,7 @@ class User_AdvanceBooking : AppCompatActivity() {
             if(originalDate == newDate) {
                 estimatedEndTime.text = "Estimated End Time: ${sdfTime.format(calendar.time)}"
             } else {
-                estimatedEndTime.text = "Estimated End Time: ${sdfTime.format(calendar.time)} (next day)"
+                estimatedEndTime.text = "Estimated End Time: ${sdfTime.format(calendar.time)}"
             }
 
         } catch (e: Exception) {

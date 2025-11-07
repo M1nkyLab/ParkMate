@@ -159,7 +159,7 @@ class User_Payment_RealtimeBooking : AppCompatActivity() {
         val bookingId = System.currentTimeMillis().toString()
         val userEmail = auth.currentUser?.email ?: "Unknown Email"
 
-        // --- 🔴 FIX 4: Calculate Start and End Timestamps based on NOW ---
+        // --- FIX 4: Calculate Start and End Timestamps based on NOW ---
         val calendar = Calendar.getInstance()
         val startTime = Timestamp(calendar.time) // Booking starts NOW
 
@@ -179,8 +179,8 @@ class User_Payment_RealtimeBooking : AppCompatActivity() {
             "status" to "Booked", // Or "Active"
             "gateAccess" to true, // Real-time booking should grant immediate access
 
-            // --- 🔴 FIX 5: Change bookingType to "Realtime" (more accurate) ---
-            "bookingType" to "Realtime", // "Reserve" is confusing
+            // --- FIX 5: Change bookingType to "Realtime" (more accurate) ---
+            "bookingType" to "Instant Parking", // "Reserve" is confusing
 
             "durationHours" to durationHours.toLong(),
             "startTime" to startTime, // The ACTUAL start time (now)

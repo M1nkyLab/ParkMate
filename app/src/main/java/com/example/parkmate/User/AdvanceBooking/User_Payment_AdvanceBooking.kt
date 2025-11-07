@@ -184,7 +184,7 @@ class User_Payment_AdvanceBooking : AppCompatActivity() {
             "price" to price,
             "status" to "Booked",
             "gateAccess" to false,
-            "bookingType" to "Instant Parking", // Use "Advance"
+            "bookingType" to "Reserve", //
             "durationHours" to durationHours.toLong(),
             "startTime" to startTime, // The SCHEDULED start time
             "endTime" to endTime      // The SCHEDULED end time

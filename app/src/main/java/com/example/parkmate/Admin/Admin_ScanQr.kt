@@ -161,26 +161,18 @@ class Admin_ScanQr : AppCompatActivity() {
      * It handles both ENTRY and EXIT scans.
      */
     private fun verifyBooking(bookingId: String) {
-
-        // --- THIS IS THE FIX ---
-        // The QR code contains "Booking ID: 1762237390440".
-        // We split the string at the ":" and take the last part, then trim whitespace.
         val idToSearch = bookingId.split(":").last().trim()
-        // idToSearch will now be "1762237390440"
-
-        // We use the new idToSearch to find the document
         val bookingRef = db.collection("bookings").document(idToSearch)
 
         bookingRef.get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
-                    // Use "slotName" to match your booking data
                     val slotName = document.getString("slotName") ?: "Unknown"
                     val status = document.getString("status") ?: "Booked"
 
                     when (status) {
                         "Booked" -> {
-                            // --- 1. ENTRY LOGIC (TIMER STARTS NOW) ---
+                            // --- ENTRY LOGIC (User just entered the gate) ---
                             val durationHours = document.getLong("durationHours")?.toInt() ?: 0
                             val calendar = Calendar.getInstance()
                             val startTime = Timestamp(calendar.time)
@@ -188,43 +180,62 @@ class Admin_ScanQr : AppCompatActivity() {
                             val endTime = Timestamp(calendar.time)
 
                             bookingRef.update(
-                                "status", "Active",
-                                "gateAccess", true,
-                                "startTime", startTime,
-                                "endTime", endTime
+                                mapOf(
+                                    "status" to "Parked",
+                                    "gateAccess" to true,
+                                    "startTime" to startTime,
+                                    "endTime" to endTime
+                                )
                             )
+
                             db.collection("parking_slots").document(slotName)
                                 .update("status", "Occupied")
 
-                            showDialog("✅ Access Granted (Entry)", "Gate opened for Slot $slotName. Timer for $durationHours hours has started.")
+                            showDialog(
+                                "✅ Access Granted (Entry)",
+                                "Gate opened for Slot $slotName. Status set to 'Parked'. Timer for $durationHours hours has started."
+                            )
                         }
 
-                        "Active" -> {
-                            // --- 2. EXIT LOGIC ---
-                            bookingRef.update("status", "Completed")
+                        "Parked" -> {
+                            // --- EXIT LOGIC (User leaving the parking area) ---
+                            bookingRef.update("status", "Exited")
                             db.collection("parking_slots").document(slotName)
                                 .update("status", "Available")
-                            showDialog("✅ Goodbye! (Exit)", "Slot $slotName is now available.")
+
+                            showDialog(
+                                "✅ Exit Recorded",
+                                "Slot $slotName is now available. Status updated to 'Exited'."
+                            )
                         }
 
-                        "Completed", "Expired" -> {
-                            // --- 3. ALREADY USED ---
-                            showDialog("⚠️ Access Denied", "This QR code has already been used.")
+                        "Exited", "Completed", "Expired" -> {
+                            // --- ALREADY USED OR FINISHED ---
+                            showDialog(
+                                "⚠️ Access Denied",
+                                "This QR code has already been used or the booking is completed."
+                            )
                         }
 
                         else -> {
-                            showDialog("❌ Invalid Booking", "Unknown status: $status")
+                            showDialog(
+                                "❌ Invalid Booking",
+                                "Unknown status: $status"
+                            )
                         }
                     }
                 } else {
-                    // This error will no longer show "Booking ID: ..."
-                    showDialog("❌ Access Denied", "Invalid QR Code. Booking not found. Scanned data: $bookingId")
+                    showDialog(
+                        "❌ Access Denied",
+                        "Invalid QR Code. Booking not found. Scanned data: $bookingId"
+                    )
                 }
             }
             .addOnFailureListener {
                 showDialog("⚠️ System Error", "Failed to verify booking: ${it.message}")
             }
     }
+
 
     /**
      * Helper to show dialog and close activity

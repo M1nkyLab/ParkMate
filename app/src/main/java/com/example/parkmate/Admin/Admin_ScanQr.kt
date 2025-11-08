@@ -13,11 +13,13 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.parkmate.R
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.Timestamp // 1. IMPORT TIMESTAMP
+import com.google.firebase.Timestamp
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
-import java.util.Calendar // 2. IMPORT CALENDAR
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -45,8 +47,6 @@ class Admin_ScanQr : AppCompatActivity() {
             requestCameraPermission()
         }
     }
-
-    // --- Camera Setup (No changes needed) ---
 
     private fun checkCameraPermission(): Boolean {
         return ContextCompat.checkSelfPermission(
@@ -96,7 +96,6 @@ class Admin_ScanQr : AppCompatActivity() {
                         if (isScanning) {
                             isScanning = false // Stop scanning
                             runOnUiThread {
-                                // 1. Clean the scanned string to remove whitespace
                                 val cleanBookingId = qrCode.trim()
                                 verifyBooking(cleanBookingId)
                             }
@@ -136,14 +135,15 @@ class Admin_ScanQr : AppCompatActivity() {
                 )
 
                 scanner.process(image)
+                    // ... inside the analyze method
                     .addOnSuccessListener { barcodes ->
-                        // Stop processing as soon as we find one valid barcode
                         if (barcodes.isNotEmpty()) {
                             barcodes[0].rawValue?.let { value ->
-                                onQrCodeDetected(value)
+                                onQrCodeDetected(value) // Correct: Call the lambda function
                             }
                         }
                     }
+
                     .addOnCompleteListener {
                         imageProxy.close()
                     }
@@ -153,13 +153,6 @@ class Admin_ScanQr : AppCompatActivity() {
         }
     }
 
-    // --- END Camera Setup ---
-
-
-    /**
-     * This is the "brain" of your app.
-     * It handles both ENTRY and EXIT scans.
-     */
     private fun verifyBooking(bookingId: String) {
         val idToSearch = bookingId.split(":").last().trim()
         val bookingRef = db.collection("bookings").document(idToSearch)
@@ -169,22 +162,45 @@ class Admin_ScanQr : AppCompatActivity() {
                 if (document.exists()) {
                     val slotName = document.getString("slotName") ?: "Unknown"
                     val status = document.getString("status") ?: "Booked"
+                    val bookingType = document.getString("bookingType") ?: ""
+                    val startTime = document.getTimestamp("startTime")
+
+                    // --- NEW: Advance Booking Date Check ---
+                    if (bookingType.equals("Reserve", ignoreCase = true) && startTime != null) {
+                        val today = Calendar.getInstance()
+                        val bookingDate = Calendar.getInstance().apply { time = startTime.toDate() }
+
+                        // Compare day, month, and year. Ignore the time.
+                        val isSameDay = today.get(Calendar.YEAR) == bookingDate.get(Calendar.YEAR) &&
+                                      today.get(Calendar.DAY_OF_YEAR) == bookingDate.get(Calendar.DAY_OF_YEAR)
+
+                        if (!isSameDay && today.before(bookingDate)) {
+                            val dateFormatter = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+                            val bookingDateStr = dateFormatter.format(bookingDate.time)
+                            showDialog(
+                                "⚠️ Access Denied",
+                                "This booking is for a future date ($bookingDateStr). Please come back on the correct date."
+                            )
+                            return@addOnSuccessListener // Stop processing
+                        }
+                    }
+                    // --- END: Advance Booking Date Check ---
 
                     when (status) {
                         "Booked" -> {
-                            // --- ENTRY LOGIC (User just entered the gate) ---
+                            // --- ENTRY LOGIC ---
                             val durationHours = document.getLong("durationHours")?.toInt() ?: 0
                             val calendar = Calendar.getInstance()
-                            val startTime = Timestamp(calendar.time)
+                            val newStartTime = Timestamp(calendar.time)
                             calendar.add(Calendar.HOUR_OF_DAY, durationHours)
-                            val endTime = Timestamp(calendar.time)
+                            val newEndTime = Timestamp(calendar.time)
 
                             bookingRef.update(
                                 mapOf(
                                     "status" to "Parked",
                                     "gateAccess" to true,
-                                    "startTime" to startTime,
-                                    "endTime" to endTime
+                                    "startTime" to newStartTime,
+                                    "endTime" to newEndTime
                                 )
                             )
 
@@ -193,12 +209,12 @@ class Admin_ScanQr : AppCompatActivity() {
 
                             showDialog(
                                 "✅ Access Granted (Entry)",
-                                "Gate opened for Slot $slotName. Status set to 'Parked'. Timer for $durationHours hours has started."
+                                "Gate opened for Slot $slotName. Status set to 'Parked'."
                             )
                         }
 
                         "Parked" -> {
-                            // --- EXIT LOGIC (User leaving the parking area) ---
+                            // --- EXIT LOGIC ---
                             bookingRef.update("status", "Exited")
                             db.collection("parking_slots").document(slotName)
                                 .update("status", "Available")
@@ -210,7 +226,6 @@ class Admin_ScanQr : AppCompatActivity() {
                         }
 
                         "Exited", "Completed", "Expired" -> {
-                            // --- ALREADY USED OR FINISHED ---
                             showDialog(
                                 "⚠️ Access Denied",
                                 "This QR code has already been used or the booking is completed."
@@ -236,18 +251,13 @@ class Admin_ScanQr : AppCompatActivity() {
             }
     }
 
-
-    /**
-     * Helper to show dialog and close activity
-     */
     private fun showDialog(title: String, message: String) {
-        // I am removing the "V2 DEBUG" from the title now that we found the bug
         AlertDialog.Builder(this)
             .setTitle(title)
             .setMessage(message)
             .setPositiveButton("OK") { dialog, _ ->
                 dialog.dismiss()
-                finish() // Close the scanner and go back to the admin main page
+                finish()
             }
             .setCancelable(false)
             .show()
@@ -258,4 +268,3 @@ class Admin_ScanQr : AppCompatActivity() {
         cameraExecutor.shutdown()
     }
 }
-

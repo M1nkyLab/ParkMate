@@ -15,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import java.text.NumberFormat
 import java.util.Locale
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FieldValue
 import java.util.Calendar
 import java.text.SimpleDateFormat
 
@@ -187,7 +188,8 @@ class User_Payment_AdvanceBooking : AppCompatActivity() {
             "bookingType" to "Reserve", //
             "durationHours" to durationHours.toLong(),
             "startTime" to startTime, // The SCHEDULED start time
-            "endTime" to endTime      // The SCHEDULED end time
+            "endTime" to endTime,     // The SCHEDULED end time
+            "timestamp" to FieldValue.serverTimestamp()
         )
 
         // --- CRITICAL FIX: Save to the root "bookings" collection ---

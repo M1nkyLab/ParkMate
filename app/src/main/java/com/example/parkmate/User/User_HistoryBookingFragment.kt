@@ -22,7 +22,7 @@ import com.google.zxing.qrcode.QRCodeWriter
 import java.text.SimpleDateFormat
 import java.util.*
 
-// Firestore data model
+// --- Data Model ---
 data class Booking(
     val bookingId: String = "",
     val slotName: String = "",
@@ -71,34 +71,26 @@ class User_HistoryBookingFragment : Fragment() {
             .addOnSuccessListener { result ->
                 bookingList.clear()
 
-                // --- FIX: Define date formatters ---
-                // For the date: "Nov 07, 2025"
+                // --- Formatters ---
                 val dateFormatter = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
-                // For the time: "11:30 AM"
-                val timeFormatter = SimpleDateFormat("h:mm a", Locale.getDefault())
+                val timeFormatter = SimpleDateFormat("hh:mm a", Locale.getDefault()) // AM/PM format
 
                 for (doc in result) {
-                    // --- FIX: Read as Timestamp, not String ---
                     val startTime = doc.getTimestamp("startTime")
                     val endTime = doc.getTimestamp("endTime")
 
-                    // --- FIX: Format the Timestamps into a readable string ---
-                    val dateFormatted: String
-                    if (startTime != null && endTime != null) {
-                        // Convert Timestamps to regular Date objects
+                    val dateFormatted: String = if (startTime != null && endTime != null) {
                         val startDate = startTime.toDate()
                         val endDate = endTime.toDate()
 
-                        // Format them
                         val dateStr = dateFormatter.format(startDate)
                         val startTimeStr = timeFormatter.format(startDate)
                         val endTimeStr = timeFormatter.format(endDate)
 
-                        // Combine into one string
-                        dateFormatted = "$dateStr, $startTimeStr – $endTimeStr"
+                        // Example: "Nov 08, 2025, 02:00 PM – 04:00 PM"
+                        "$dateStr, $startTimeStr – $endTimeStr"
                     } else {
-                        // Fallback for any old/missing data
-                        dateFormatted = "Unknown Date"
+                        "Unknown Date"
                     }
 
                     val booking = Booking(
@@ -109,26 +101,24 @@ class User_HistoryBookingFragment : Fragment() {
                         price = doc.getDouble("price") ?: 0.0,
                         status = doc.getString("status") ?: "Unknown",
                         gateAccess = doc.getBoolean("gateAccess") ?: false,
-                        date = dateFormatted // Use the new formatted string
+                        date = dateFormatted
                     )
                     bookingList.add(booking)
                 }
 
-                // Sort by newest (based on bookingId which is a timestamp string)
+                // Sort by newest booking first
                 bookingList.sortByDescending { it.bookingId }
-
                 bookingAdapter.notifyDataSetChanged()
             }
             .addOnFailureListener { e ->
-                // --- FIX: Add better error handling ---
                 Log.e("HistoryFragment", "Error loading bookings", e)
-                if (isAdded) { // Check if fragment is still attached
+                if (isAdded) {
                     Toast.makeText(requireContext(), "Failed to load history: ${e.message}", Toast.LENGTH_LONG).show()
                 }
             }
     }
 
-    // RecyclerView Adapter
+    // --- RecyclerView Adapter ---
     inner class BookingAdapter(private val list: List<Booking>) :
         RecyclerView.Adapter<BookingAdapter.BookingViewHolder>() {
 
@@ -156,12 +146,21 @@ class User_HistoryBookingFragment : Fragment() {
             holder.date.text = "Date: ${booking.date}"
             holder.status.text = "Status: ${booking.status}"
 
+            // Optional: color-code status
+            when (booking.status.lowercase(Locale.getDefault())) {
+                "booked" -> holder.status.setTextColor(Color.parseColor("#FFA500")) // orange
+                "completed" -> holder.status.setTextColor(Color.parseColor("#4CAF50")) // green
+                "cancelled" -> holder.status.setTextColor(Color.parseColor("#F44336")) // red
+                else -> holder.status.setTextColor(Color.WHITE)
+            }
+
             generateQRCode("Booking ID: ${booking.bookingId}", holder.qrCode)
         }
 
         override fun getItemCount(): Int = list.size
     }
 
+    // --- QR Code Generator ---
     private fun generateQRCode(data: String, imageView: ImageView) {
         val writer = QRCodeWriter()
         try {

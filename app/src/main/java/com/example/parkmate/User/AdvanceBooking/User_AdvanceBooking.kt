@@ -197,15 +197,23 @@ class User_AdvanceBooking : AppCompatActivity() {
             calendar.get(Calendar.DAY_OF_MONTH)
         ).show()
     }
-
     private fun pickTime() {
         val calendar = Calendar.getInstance()
-        TimePickerDialog(this, { _, h, m ->
-            selectedTimeText.text = String.format("%02d:%02d", h, m)
-            updateUIState(isReady = false) // Require user to search again
-        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show()
-    }
+        TimePickerDialog(
+            this,
+            { _, h, m ->
+                // Convert to 12-hour format with AM/PM
+                val amPm = if (h >= 12) "PM" else "AM"
+                val hour12 = if (h % 12 == 0) 12 else h % 12
+                selectedTimeText.text = String.format("%02d:%02d %s", hour12, m, amPm)
 
+                updateUIState(isReady = false) // Require user to search again
+            },
+            calendar.get(Calendar.HOUR_OF_DAY),
+            calendar.get(Calendar.MINUTE),
+            false // <-- set false for 12-hour format
+        ).show()
+    }
 
     /** --- NEW: This is the core logic to check availability --- */
     private fun findAvailableSlots() {
@@ -296,6 +304,7 @@ class User_AdvanceBooking : AppCompatActivity() {
     }
 
     /** --- NEW: Calculate estimated end time (handles next-day rollover) --- */
+    /** --- UPDATED: Calculate estimated end time with AM/PM --- */
     private fun calculateEndTime() {
         val startTimeStr = selectedTimeText.text.toString()
         val durationStr = hourSpinner.selectedItem?.toString() ?: return
@@ -307,32 +316,21 @@ class User_AdvanceBooking : AppCompatActivity() {
         }
 
         try {
-            val sdfDateTime = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+            // Parse 12-hour time with AM/PM
+            val sdfDateTime = SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.getDefault())
             val startDate = sdfDateTime.parse("$selectedDateStr $startTimeStr") ?: return
 
             val calendar = Calendar.getInstance()
             calendar.time = startDate
             calendar.add(Calendar.HOUR_OF_DAY, durationStr.toInt())
 
-            val sdfTime = SimpleDateFormat("HH:mm", Locale.getDefault())
-            val endDateFormatted = sdfDateTime.format(calendar.time)
-
-            // Check if it's a different day
-            val sdfDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-            val originalDate = sdfDate.parse(selectedDateStr)
-            val newDate = sdfDate.parse(endDateFormatted.split(" ")[0]) // Get just the date part
-
-            if(originalDate == newDate) {
-                estimatedEndTime.text = "Estimated End Time: ${sdfTime.format(calendar.time)}"
-            } else {
-                estimatedEndTime.text = "Estimated End Time: ${sdfTime.format(calendar.time)}"
-            }
+            val endTimeFormatted = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(calendar.time)
+            estimatedEndTime.text = "Estimated End Time: $endTimeFormatted"
 
         } catch (e: Exception) {
             estimatedEndTime.text = "Estimated End Time: -"
         }
     }
-
 
     /** --- NEW: Enable/Disable buttons based on state --- */
     private fun updateUIState(isReady: Boolean) {

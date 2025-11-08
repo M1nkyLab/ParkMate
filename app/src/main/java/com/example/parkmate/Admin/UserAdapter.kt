@@ -31,7 +31,6 @@ class UserAdapter(
         val txtRole: TextView = itemView.findViewById(R.id.txtRole)
         val txtCreatedAt: TextView = itemView.findViewById(R.id.txtCreatedAt)
         val btnDelete: Button = itemView.findViewById(R.id.btnDeleteUser)
-        // --- THIS IS THE UPDATE ---
         val btnEdit: Button = itemView.findViewById(R.id.btnEditUser)
     }
 

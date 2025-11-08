@@ -15,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import java.text.NumberFormat
 import java.util.Locale
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FieldValue
 import java.util.Calendar
 
 class User_Payment_InstantBooking : AppCompatActivity() {
@@ -183,7 +184,8 @@ class User_Payment_InstantBooking : AppCompatActivity() {
 
             "durationHours" to durationHours.toLong(),
             "startTime" to startTime, // The ACTUAL start time (now)
-            "endTime" to endTime      // The calculated end time
+            "endTime" to endTime,      // The calculated end time
+            "timestamp" to FieldValue.serverTimestamp()
         )
 
         db.collection("bookings").document(bookingId)

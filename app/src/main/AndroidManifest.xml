@@ -78,6 +78,16 @@
         <activity android:name=".User.InstantBooking.User_Payment_InstantBooking"
             android:exported="true" />
 
+        <activity android:name=".User.User_Edit_Profile"
+            android:exported="true" />
+
+
+
+
+
+
+
+
 
         <!-- Admin activities -->
         <activity android:name=".Admin.Admin_MainPage"

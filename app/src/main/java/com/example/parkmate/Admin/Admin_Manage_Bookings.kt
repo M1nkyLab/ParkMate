@@ -197,7 +197,8 @@ class BookingAdapter(
     private val bookings: List<Booking>
 ) : RecyclerView.Adapter<BookingAdapter.BookingViewHolder>() {
 
-    private val dateFormatter = SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault())
+    // ✅ Use 12-hour format with AM/PM
+    private val timeFormatter = SimpleDateFormat("dd/MM/yy hh:mm a", Locale.getDefault())
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookingViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -207,7 +208,7 @@ class BookingAdapter(
 
     override fun onBindViewHolder(holder: BookingViewHolder, position: Int) {
         val booking = bookings[position]
-        holder.bind(booking, dateFormatter)
+        holder.bind(booking, timeFormatter)
     }
 
     override fun getItemCount(): Int = bookings.size
@@ -227,23 +228,23 @@ class BookingAdapter(
             textStatus.text = "Status: ${booking.status}"
             textBookingType.text = "Type: ${booking.bookingType.ifEmpty { "Unknown" }}"
 
-            // ✅ Dynamic color for booking type
+            // Booking type color
             when (booking.bookingType.lowercase(Locale.ROOT)) {
                 "instant" -> textBookingType.setTextColor(Color.parseColor("#2ECC71")) // Green
                 "reserve" -> textBookingType.setTextColor(Color.parseColor("#9B59B6")) // Purple
                 else -> textBookingType.setTextColor(Color.parseColor("#CCCCCC"))
             }
 
-            // ✅ Time display
+            // ✅ Format start and end times with AM/PM
             if (booking.startTime != null && booking.endTime != null) {
-                val startTime = formatter.format(booking.startTime.toDate())
-                val endTime = formatter.format(booking.endTime.toDate())
-                textTime.text = "$startTime → $endTime"
+                val startTimeStr = formatter.format(booking.startTime.toDate())
+                val endTimeStr = formatter.format(booking.endTime.toDate())
+                textTime.text = "$startTimeStr → $endTimeStr"
             } else {
                 textTime.text = "Duration: ${booking.selectedTime}"
             }
 
-            // ✅ Status color update
+            // Status color
             when (booking.status.lowercase(Locale.ROOT)) {
                 "booked" -> textStatus.setTextColor(Color.parseColor("#3498DB")) // Blue
                 "parked" -> textStatus.setTextColor(Color.parseColor("#2ECC71")) // Green
@@ -254,3 +255,4 @@ class BookingAdapter(
         }
     }
 }
+

@@ -58,6 +58,8 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:34.2.0"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-functions:20.4.0")
+    implementation("com.google.firebase:firebase-messaging") // for the cloud messaging in firebase
     implementation("com.google.android.gms:play-services-auth:21.2.0")
 
     // Image Loading

@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,7 @@ import com.example.parkmate.R
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.functions.FirebaseFunctions
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -33,6 +35,7 @@ class Admin_Manage_Bookings : AppCompatActivity() {
     private lateinit var btnReserve: Button
 
     private lateinit var db: FirebaseFirestore
+    private lateinit var functions: FirebaseFunctions
     private lateinit var bookingAdapter: BookingAdapter
 
     private val allBookingsList = mutableListOf<Booking>()
@@ -45,6 +48,7 @@ class Admin_Manage_Bookings : AppCompatActivity() {
         setContentView(R.layout.admin_manage_bookings)
 
         db = FirebaseFirestore.getInstance()
+        functions = FirebaseFunctions.getInstance()
 
         recyclerBookings = findViewById(R.id.recyclerBookings)
         inputSearchBooking = findViewById(R.id.inputSearchBooking)
@@ -55,7 +59,7 @@ class Admin_Manage_Bookings : AppCompatActivity() {
         btnInstant = findViewById(R.id.btnInstant)
         btnReserve = findViewById(R.id.btnReserve)
 
-        bookingAdapter = BookingAdapter(displayBookingsList)
+        bookingAdapter = BookingAdapter(displayBookingsList, functions)
         recyclerBookings.layoutManager = LinearLayoutManager(this)
         recyclerBookings.adapter = bookingAdapter
 
@@ -83,7 +87,7 @@ class Admin_Manage_Bookings : AppCompatActivity() {
                 if (snapshots != null) {
                     allBookingsList.clear()
                     for (doc in snapshots) {
-                        val booking = doc.toObject(Booking::class.java)
+                        val booking = doc.toObject(Booking::class.java).copy(docId = doc.id)
                         allBookingsList.add(booking)
                     }
                     filterAndSearchBookings()
@@ -179,6 +183,7 @@ class Admin_Manage_Bookings : AppCompatActivity() {
 
 // --- Data Class ---
 data class Booking(
+    val docId: String = "", // Added to store the document ID
     val bookingId: String = "",
     val vehicleNumber: String = "",
     val slotName: String = "",
@@ -194,16 +199,16 @@ data class Booking(
 
 // --- Adapter Class ---
 class BookingAdapter(
-    private val bookings: List<Booking>
+    private val bookings: List<Booking>,
+    private val functions: FirebaseFunctions
 ) : RecyclerView.Adapter<BookingAdapter.BookingViewHolder>() {
 
-    // ✅ Use 12-hour format with AM/PM
     private val timeFormatter = SimpleDateFormat("dd/MM/yy hh:mm a", Locale.getDefault())
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookingViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.admin_item_bookings, parent, false)
-        return BookingViewHolder(view)
+        return BookingViewHolder(view, functions)
     }
 
     override fun onBindViewHolder(holder: BookingViewHolder, position: Int) {
@@ -213,13 +218,14 @@ class BookingAdapter(
 
     override fun getItemCount(): Int = bookings.size
 
-    class BookingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class BookingViewHolder(itemView: View, private val functions: FirebaseFunctions) : RecyclerView.ViewHolder(itemView) {
         private val textBookingId: TextView = itemView.findViewById(R.id.textBookingId)
         private val textPlateNumber: TextView = itemView.findViewById(R.id.textPlateNumber)
         private val textBookingType: TextView = itemView.findViewById(R.id.textBookingType)
         private val textSlot: TextView = itemView.findViewById(R.id.textSlot)
         private val textTime: TextView = itemView.findViewById(R.id.textTime)
         private val textStatus: TextView = itemView.findViewById(R.id.textStatus)
+        private val btnSendNotification: Button = itemView.findViewById(R.id.btnSendNotification)
 
         fun bind(booking: Booking, formatter: SimpleDateFormat) {
             textBookingId.text = "ID: ${booking.bookingId}"
@@ -230,12 +236,11 @@ class BookingAdapter(
 
             // Booking type color
             when (booking.bookingType.lowercase(Locale.ROOT)) {
-                "instant" -> textBookingType.setTextColor(Color.parseColor("#2ECC71")) // Green
-                "reserve" -> textBookingType.setTextColor(Color.parseColor("#9B59B6")) // Purple
+                "instant" -> textBookingType.setTextColor(Color.parseColor("#2ECC71"))
+                "reserve" -> textBookingType.setTextColor(Color.parseColor("#9B59B6"))
                 else -> textBookingType.setTextColor(Color.parseColor("#CCCCCC"))
             }
 
-            // ✅ Format start and end times with AM/PM
             if (booking.startTime != null && booking.endTime != null) {
                 val startTimeStr = formatter.format(booking.startTime.toDate())
                 val endTimeStr = formatter.format(booking.endTime.toDate())
@@ -246,13 +251,43 @@ class BookingAdapter(
 
             // Status color
             when (booking.status.lowercase(Locale.ROOT)) {
-                "booked" -> textStatus.setTextColor(Color.parseColor("#3498DB")) // Blue
-                "parked" -> textStatus.setTextColor(Color.parseColor("#2ECC71")) // Green
-                "exited" -> textStatus.setTextColor(Color.parseColor("#F1C40F")) // Yellow
-                "expired", "cancelled" -> textStatus.setTextColor(Color.parseColor("#E74C3C")) // Red
+                "booked" -> textStatus.setTextColor(Color.parseColor("#3498DB"))
+                "parked" -> textStatus.setTextColor(Color.parseColor("#2ECC71"))
+                "exited" -> textStatus.setTextColor(Color.parseColor("#F1C40F"))
+                "expired", "cancelled" -> textStatus.setTextColor(Color.parseColor("#E74C3C"))
                 else -> textStatus.setTextColor(Color.parseColor("#FFFFFF"))
             }
+
+            // Show button logic
+            val now = Timestamp.now()
+            if (booking.status.equals("Parked", ignoreCase = true) && booking.endTime != null && booking.endTime < now) {
+                btnSendNotification.visibility = View.VISIBLE
+            } else {
+                btnSendNotification.visibility = View.GONE
+            }
+
+            // Button click listener
+            btnSendNotification.setOnClickListener {
+                sendNotification(booking.docId)
+            }
+        }
+
+        private fun sendNotification(bookingId: String) {
+            btnSendNotification.isEnabled = false // Prevent double clicks
+            val data = hashMapOf("bookingId" to bookingId)
+
+            functions
+                .getHttpsCallable("sendManualOverstayNotification")
+                .call(data)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(itemView.context, "Notification sent successfully!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Log.w("MANUAL_NOTIFICATION", "Failed to send notification", task.exception)
+                        Toast.makeText(itemView.context, "Error: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                    }
+                    btnSendNotification.isEnabled = true // Re-enable button
+                }
         }
     }
 }
-

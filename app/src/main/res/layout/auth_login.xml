@@ -48,7 +48,19 @@
         android:textColor="#FFFFFF"
         android:textColorHint="#BBBBBB"
         android:inputType="textPassword"
-        android:layout_marginBottom="24dp" />
+        android:layout_marginBottom="8dp" />
+
+    <!-- Forgot Password -->
+    <TextView
+        android:id="@+id/forgotPasswordText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Forgot Password?"
+        android:textColor="#8E44AD"
+        android:layout_gravity="end"
+        android:layout_marginBottom="24dp"
+        android:clickable="true"
+        android:focusable="true" />
 
     <!-- Login Button -->
     <Button
@@ -69,10 +81,11 @@
         android:id="@+id/registerRedirect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Don’t have an account? Register"
+        android.text="Don’t have an account? Register"
         android:textColor="#8E44AD"
         android:textStyle="italic"
         android:layout_marginTop="16dp"
         android:clickable="true"
         android:focusable="true" />
+
 </LinearLayout>

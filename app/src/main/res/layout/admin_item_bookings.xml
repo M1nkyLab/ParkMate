@@ -4,9 +4,9 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/rounded_card_background"
-    android.padding="16dp"
-    android:layout_marginBottom="10dp"
-    android:elevation="4dp">
+    android:padding="18dp"
+    android:layout_marginBottom="12dp"
+    android:elevation="6dp">
 
     <!-- Booking ID -->
     <TextView
@@ -16,7 +16,15 @@
         android:text="Booking ID: B001"
         android:textColor="#FFFFFF"
         android:textStyle="bold"
-        android:textSize="16sp" />
+        android:textSize="17sp" />
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="8dp"
+        android:background="#22FFFFFF" />
 
     <!-- Plate Number -->
     <TextView
@@ -24,9 +32,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Plate: ABC1234"
-        android:textColor="#CCCCCC"
-        android:textSize="14sp"
-        android:layout_marginTop="4dp" />
+        android:textColor="#E0E0E0"
+        android:textSize="15sp"
+        android:layout_marginTop="2dp" />
 
     <!-- Booking Type -->
     <TextView
@@ -34,7 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Type: Realtime"
-        android:textColor="#CCCCCC"
+        android:textColor="#BDBDBD"
         android:textSize="14sp"
         android:layout_marginTop="2dp" />
 
@@ -44,7 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Slot: A01"
-        android:textColor="#CCCCCC"
+        android:textColor="#BDBDBD"
         android:textSize="14sp"
         android:layout_marginTop="2dp" />
 
@@ -54,28 +62,36 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="14:00 - 16:00 (2025-10-18)"
-        android:textColor="#AAAAAA"
+        android:textColor="#9E9E9E"
         android:textSize="13sp"
         android:layout_marginTop="2dp" />
 
-    <!-- Status -->
+    <!-- Status Badge -->
     <TextView
         android:id="@+id/textStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Status: Completed"
-        android:textColor="#8E44AD"
+        android:textColor="#BB86FC"
         android:textStyle="bold"
         android:textSize="13sp"
-        android:layout_marginTop="4dp" />
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_gravity="start" />
 
     <!-- Manual Notification Button -->
     <Button
         android:id="@+id/btnSendNotification"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
         android:text="Send Overstay Alert"
-        android:layout_marginTop="12dp"
-        android:visibility="gone" /> <!-- Hidden by default -->
-
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        android:backgroundTint="#E91E63"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="4dp"
+        android:visibility="invisible" /> <!-- Invisible keeps the space -->
 </LinearLayout>

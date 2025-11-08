@@ -123,7 +123,7 @@ class Admin_Manage_Bookings : AppCompatActivity() {
         }
 
         btnInstant.setOnClickListener {
-            currentStatusFilter = "Instant" // not "Instant Booking"
+            currentStatusFilter = "Instant Parking" // <-- FIX: Changed from "Instant" to "Instant Parking"
             updateButtonStyles(btnInstant)
             filterAndSearchBookings()
         }
@@ -236,7 +236,7 @@ class BookingAdapter(
 
             // Booking type color
             when (booking.bookingType.lowercase(Locale.ROOT)) {
-                "instant" -> textBookingType.setTextColor(Color.parseColor("#2ECC71"))
+                "instant parking" -> textBookingType.setTextColor(Color.parseColor("#2ECC71"))
                 "reserve" -> textBookingType.setTextColor(Color.parseColor("#9B59B6"))
                 else -> textBookingType.setTextColor(Color.parseColor("#CCCCCC"))
             }

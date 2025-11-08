@@ -32,6 +32,7 @@ class Auth_Login : AppCompatActivity() {
         val passwordInput: EditText = findViewById(R.id.loginPasswordInput)
         val loginButton: Button = findViewById(R.id.loginButton)
         val registerRedirect: TextView = findViewById(R.id.registerRedirect)
+        val forgotPasswordText: TextView = findViewById(R.id.forgotPasswordText) // Added this line
 
         loginButton.setOnClickListener {
             val email = emailInput.text.toString().trim()
@@ -94,6 +95,27 @@ class Auth_Login : AppCompatActivity() {
             val intent = Intent(this, Auth_Register::class.java)
             startActivity(intent)
         }
+
+        // Forgot Password listener
+        forgotPasswordText.setOnClickListener {
+            val email = emailInput.text.toString().trim()
+            if (email.isNotEmpty()) {
+                sendPasswordResetEmail(email)
+            } else {
+                Toast.makeText(this, "Please enter your email to reset password", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun sendPasswordResetEmail(email: String) {
+        auth.sendPasswordResetEmail(email)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(this, "Password reset email sent to $email", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(this, "Failed to send reset email: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                }
+            }
     }
 
     // 🔹 Auto-login role check

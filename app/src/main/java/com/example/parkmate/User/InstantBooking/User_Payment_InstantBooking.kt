@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
@@ -73,16 +74,8 @@ class User_Payment_InstantBooking : AppCompatActivity() {
         selectedTime = intent.getStringExtra("selectedTime") ?: "N/A" // e.g., "2 Hour"
         price = intent.getDoubleExtra("price", 0.0)
 
-        // --- 🔴 FIX 1: Use the correct intent key "selectedPlate" ---
-        numberPlate = intent.getStringExtra("selectedPlate") ?: "N/A" //
-
-        // --- 🔴 FIX 2: Parse duration from the "selectedTime" string ---
-        // This is needed for the next fix
+        numberPlate = intent.getStringExtra("selectedPlate") ?: "N/A"
         durationHours = selectedTime.split(" ")[0].toIntOrNull() ?: 0
-
-        // --- 🔴 FIX 3: Remove Advance Booking data that is not sent ---
-        // selectedDate = intent.getStringExtra("selectedDate") ?: "" // REMOVE THIS
-        // selectedStartTime = intent.getStringExtra("selectedStartTime") ?: "" // REMOVE THIS
 
         val format = NumberFormat.getCurrencyInstance(Locale("ms", "MY"))
         val formattedPrice = format.format(price)
@@ -154,59 +147,58 @@ class User_Payment_InstantBooking : AppCompatActivity() {
         }, 2000)
     }
 
-    // In User_Payment_InstantBooking.kt (File 9)
     private fun saveBookingToFirestore() {
         val bookingId = System.currentTimeMillis().toString()
-        val userEmail = auth.currentUser?.email ?: "Unknown Email"
+        val userEmail = auth.currentUser?.email
+        val userId = auth.currentUser?.uid
 
-        // --- FIX 4: Calculate Start and End Timestamps based on NOW ---
+        // --- NEW, MORE ROBUST CHECK ---
+        if (userId == null || userId.isEmpty() || userEmail == null) {
+            Toast.makeText(this, "Error: User not logged in. Cannot create booking.", Toast.LENGTH_LONG).show()
+            Log.e("BOOKING_ERROR", "User ID or Email is null, cannot save booking.")
+            return // Stop the function here
+        }
+
         val calendar = Calendar.getInstance()
-        val startTime = Timestamp(calendar.time) // Booking starts NOW
+        val startTime = Timestamp(calendar.time)
 
-        // Add the duration (parsed in Fix 2)
         if (durationHours > 0) {
             calendar.add(Calendar.HOUR_OF_DAY, durationHours)
         }
-        val endTime = Timestamp(calendar.time) // This is the calculated endTime
+        val endTime = Timestamp(calendar.time)
 
         val bookingData = hashMapOf(
             "bookingId" to bookingId,
+            "userId" to userId, // Now guaranteed to be non-null
             "userEmail" to userEmail,
             "slotName" to slotName,
             "selectedTime" to selectedTime,
-            "vehicleNumber" to numberPlate, // This will now have the correct plate
+            "vehicleNumber" to numberPlate,
             "price" to price,
-            "status" to "Booked", // Or "Active"
-            "gateAccess" to true, // Real-time booking should grant immediate access
-
-            // --- FIX 5: Change bookingType to "Realtime" (more accurate) ---
-            "bookingType" to "Instant Parking", // "Reserve" is confusing
-
+            "status" to "Booked",
+            "gateAccess" to true,
+            "bookingType" to "Instant Parking",
             "durationHours" to durationHours.toLong(),
-            "startTime" to startTime, // The ACTUAL start time (now)
-            "endTime" to endTime,      // The calculated end time
+            "startTime" to startTime,
+            "endTime" to endTime,
             "timestamp" to FieldValue.serverTimestamp()
         )
 
         db.collection("bookings").document(bookingId)
             .set(bookingData)
             .addOnSuccessListener {
-
-                // --- 🔴 FIX 6: CRITICAL - Update the parking slot to "Booked" ---
                 db.collection("parking_slots").document(slotName)
                     .update("status", "Booked")
                     .addOnSuccessListener {
-                        showSuccessDialog(bookingId) // Show success after both save
+                        showSuccessDialog(bookingId)
                     }
                     .addOnFailureListener { e ->
-                        // The booking saved, but slot update failed.
                         Toast.makeText(this, "Booking saved, but failed to update slot: ${e.message}", Toast.LENGTH_LONG).show()
-                        showSuccessDialog(bookingId) // Still proceed
+                        showSuccessDialog(bookingId)
                     }
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Failed to save booking: ${e.message}", Toast.LENGTH_SHORT).show()
-
             }
     }
 
@@ -217,7 +209,6 @@ class User_Payment_InstantBooking : AppCompatActivity() {
             .setPositiveButton("OK") { dialog, _ ->
                 dialog.dismiss()
                 val intent = Intent(this, User_CompletePayment_InstantBooking::class.java)
-                // Pass the bookingId so the next screen can load it
                 intent.putExtra("bookingId", bookingId)
                 startActivity(intent)
                 finish()

@@ -72,18 +72,6 @@
                 android:inputType="textPersonName" />
 
             <EditText
-                android:id="@+id/registerPlateInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Plate Number"
-                android:background="@drawable/input_floating_style"
-                android:padding="16dp"
-                android:textColor="#FFFFFF"
-                android:textColorHint="#888888"
-                android:layout_marginBottom="16dp"
-                android:inputType="textCapCharacters" />
-
-            <EditText
                 android:id="@+id/registerPasswordInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

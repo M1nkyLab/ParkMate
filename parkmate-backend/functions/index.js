@@ -48,7 +48,7 @@
       const message = {
         notification: {
           title: "Parking Alert",
-          body: "An admin has noted that your parking session has expired. Please move your vehicle.",
+          body: "⏰ Time’s up! Please leave your parking spot.",
         },
         token: fcmToken,
       };

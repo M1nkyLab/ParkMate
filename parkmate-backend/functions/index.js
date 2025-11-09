@@ -45,10 +45,11 @@ exports.sendManualOverstayNotification = onCall(async (request) => {
   }
 
   // If we get here, everything was found. Now, send the message.
+  // if want to update just edit the message here and then in shell type "firebase deploy --only functions"
   const message = {
     notification: {
       title: "Parking Alert",
-      body: "⏰ Time’s up! Please leave your parking spot.",
+      body: "⏰ Time’s up! Please leave your parking spots.",
     },
     token: fcmToken,
   };

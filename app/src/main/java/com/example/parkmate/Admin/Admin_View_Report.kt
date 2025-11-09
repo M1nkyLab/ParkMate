@@ -8,7 +8,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.parkmate.R
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.functions.FirebaseFunctions
 import java.util.*
 
 class Admin_View_Report : AppCompatActivity() {
@@ -16,9 +15,8 @@ class Admin_View_Report : AppCompatActivity() {
     private lateinit var totalUsers: TextView
     private lateinit var totalBookings: TextView
     private lateinit var totalRevenue: TextView
-    private lateinit var btnClearReports: Button // Added button
+    private lateinit var btnClearReports: Button
     private val db = FirebaseFirestore.getInstance()
-    private lateinit var functions: FirebaseFunctions // Added functions instance
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,19 +25,16 @@ class Admin_View_Report : AppCompatActivity() {
         totalUsers = findViewById(R.id.totalUsers)
         totalBookings = findViewById(R.id.totalBookings)
         totalRevenue = findViewById(R.id.totalRevenue)
-        btnClearReports = findViewById(R.id.btnClearReports) // Find button
-        functions = FirebaseFunctions.getInstance() // Initialize functions
+        btnClearReports = findViewById(R.id.btnClearReports)
 
         loadReportData()
 
-        // Set listener for the new button
         btnClearReports.setOnClickListener {
-            // Show a confirmation dialog before deleting
             AlertDialog.Builder(this)
                 .setTitle("Confirm Action")
-                .setMessage("Are you sure you want to permanently clear all reports older than 30 days? This action cannot be undone.")
+                .setMessage("Are you sure you want to permanently clear all reports? This will delete all booking data.")
                 .setPositiveButton("Clear") { _, _ ->
-                    clearOldReports()
+                    clearReportsFromDatabase()
                 }
                 .setNegativeButton("Cancel", null)
                 .show()
@@ -47,7 +42,6 @@ class Admin_View_Report : AppCompatActivity() {
     }
 
     private fun loadReportData() {
-        // This function remains the same
         db.collection("users").get()
             .addOnSuccessListener { result ->
                 totalUsers.text = result.size().toString()
@@ -81,21 +75,32 @@ class Admin_View_Report : AppCompatActivity() {
             }
     }
 
-    // New function to call the Cloud Function
-    private fun clearOldReports() {
-        functions
-            .getHttpsCallable("clearOldReports")
-            .call()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val result = task.result?.data as? Map<*, *>
-                    val message = result?.get("message")?.toString() ?: "Operation completed."
-                    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-                    // Refresh the report data after clearing
-                    loadReportData()
-                } else {
-                    Toast.makeText(this, "Error: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+    private fun clearReportsFromDatabase() {
+        db.collection("bookings")
+            .get()
+            .addOnSuccessListener { result ->
+                if (result.isEmpty) {
+                    Toast.makeText(this, "No bookings to clear.", Toast.LENGTH_SHORT).show()
+                    return@addOnSuccessListener
                 }
+
+                val batch = db.batch()
+                for (doc in result.documents) {
+                    batch.delete(doc.reference)
+                }
+
+                batch.commit()
+                    .addOnSuccessListener {
+                        totalBookings.text = "0"
+                        totalRevenue.text = "RM 0.00"
+                        Toast.makeText(this, "All reports cleared successfully!", Toast.LENGTH_SHORT).show()
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(this, "Failed to clear reports: ${e.message}", Toast.LENGTH_LONG).show()
+                    }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Error loading bookings: ${e.message}", Toast.LENGTH_LONG).show()
             }
     }
 

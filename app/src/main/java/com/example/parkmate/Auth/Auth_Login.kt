@@ -19,7 +19,7 @@ class Auth_Login : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
-    private var isNavigating = false // 🔹 Prevents double navigation
+    private var isNavigating = false // Prevents double navigation
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,63 +32,34 @@ class Auth_Login : AppCompatActivity() {
         val passwordInput: EditText = findViewById(R.id.loginPasswordInput)
         val loginButton: Button = findViewById(R.id.loginButton)
         val registerRedirect: TextView = findViewById(R.id.registerRedirect)
-        val forgotPasswordText: TextView = findViewById(R.id.forgotPasswordText) // Added this line
+        val forgotPasswordText: TextView = findViewById(R.id.forgotPasswordText)
 
         loginButton.setOnClickListener {
             val email = emailInput.text.toString().trim()
             val password = passwordInput.text.toString().trim()
 
-            if (email.isNotEmpty() && password.isNotEmpty()) {
-                auth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            val user = auth.currentUser
-                            if (user != null) {
-                                val userId = user.uid
-                                // Get FCM token and save it to Firestore
-                                FirebaseMessaging.getInstance().token.addOnCompleteListener { tokenTask ->
-                                    if (tokenTask.isSuccessful) {
-                                        val token = tokenTask.result
-                                        val userDocRef = firestore.collection("users").document(userId)
-                                        userDocRef.update("fcmToken", token)
-                                            .addOnSuccessListener {
-                                                Log.d("FCM", "Token updated successfully for user: $userId")
-                                            }
-                                            .addOnFailureListener { e ->
-                                                Log.w("FCM", "Error updating token", e)
-                                            }
-
-                                        // Role-based navigation
-                                        firestore.collection("users").document(userId).get()
-                                            .addOnSuccessListener { document ->
-                                                if (document != null && document.exists()) {
-                                                    val role = document.getString("role")
-                                                    if (role == "admin") {
-                                                        Toast.makeText(this, "Welcome Admin", Toast.LENGTH_SHORT).show()
-                                                        navigateTo(Admin_MainPage::class.java)
-                                                    } else {
-                                                        Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
-                                                        navigateTo(User_Home::class.java)
-                                                    }
-                                                } else {
-                                                    Toast.makeText(this, "User data not found", Toast.LENGTH_SHORT).show()
-                                                }
-                                            }
-                                            .addOnFailureListener {
-                                                Toast.makeText(this, "Failed to get user role", Toast.LENGTH_SHORT).show()
-                                            }
-                                    } else {
-                                        Toast.makeText(this, "Failed to get FCM token", Toast.LENGTH_SHORT).show()
-                                    }
-                                }
-                            }
-                        } else {
-                            Toast.makeText(this, "Error: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-            } else {
+            if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Please enter email and password", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
+
+            // Step 1: Sign in the user
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnSuccessListener { authResult ->
+                    val user = authResult.user
+                    if (user == null) {
+                        Toast.makeText(this, "Login failed: User not found.", Toast.LENGTH_LONG).show()
+                        return@addOnSuccessListener
+                    }
+                    Log.d("LOGIN", "Authentication successful for ${user.email}")
+                    // Step 2: User is signed in, now check their role
+                    checkUserRole(user.uid)
+                }
+                .addOnFailureListener { e ->
+                    // This happens if the password is wrong or the user doesn't exist in Auth
+                    Log.w("LOGIN", "Authentication failed", e)
+                    Toast.makeText(this, "Login failed: ${e.message}", Toast.LENGTH_LONG).show()
+                }
         }
 
         registerRedirect.setOnClickListener {
@@ -96,13 +67,53 @@ class Auth_Login : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Forgot Password listener
         forgotPasswordText.setOnClickListener {
             val email = emailInput.text.toString().trim()
             if (email.isNotEmpty()) {
                 sendPasswordResetEmail(email)
             } else {
                 Toast.makeText(this, "Please enter your email to reset password", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun checkUserRole(userId: String) {
+        // Step 3: Read the user's document from Firestore
+        firestore.collection("users").document(userId).get()
+            .addOnSuccessListener { document ->
+                if (document != null && document.exists()) {
+                    val role = document.getString("role")
+                    Log.d("LOGIN", "User role is: $role")
+                    // Step 4: Navigate based on role
+                    if (role == "admin") {
+                        navigateTo(Admin_MainPage::class.java)
+                    } else {
+                        navigateTo(User_Home::class.java)
+                    }
+                    // Also, update the FCM token in the background
+                    updateFcmToken(userId)
+                } else {
+                    // This happens if the user exists in Auth but not in Firestore database
+                    Log.w("LOGIN", "User document not found in Firestore for UID: $userId")
+                    Toast.makeText(this, "User data not found. Please contact support.", Toast.LENGTH_LONG).show()
+                }
+            }
+            .addOnFailureListener { e ->
+                // This happens if Firestore rules are wrong or there's a network issue
+                Log.e("LOGIN", "Failed to read user document", e)
+                Toast.makeText(this, "Error checking user role: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+    }
+
+    private fun updateFcmToken(userId: String) {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { tokenTask ->
+            if (tokenTask.isSuccessful) {
+                val token = tokenTask.result
+                firestore.collection("users").document(userId).update("fcmToken", token)
+                    .addOnSuccessListener { Log.d("FCM", "FCM token updated successfully.") }
+                    .addOnFailureListener { e -> Log.w("FCM", "Failed to update FCM token.", e) }
+            } else {
+                Log.w("FCM", "Fetching FCM registration token failed", tokenTask.exception)
             }
         }
     }
@@ -118,23 +129,11 @@ class Auth_Login : AppCompatActivity() {
             }
     }
 
-    // 🔹 Auto-login role check
     override fun onStart() {
         super.onStart()
         val currentUser = auth.currentUser
         if (currentUser != null && !isNavigating) {
-            val userId = currentUser.uid
-            firestore.collection("users").document(userId).get()
-                .addOnSuccessListener { document ->
-                    if (document != null && document.exists()) {
-                        val role = document.getString("role")
-                        if (role == "admin") {
-                            navigateTo(Admin_MainPage::class.java)
-                        } else {
-                            navigateTo(User_Home::class.java)
-                        }
-                    }
-                }
+            checkUserRole(currentUser.uid)
         }
     }
 
@@ -142,6 +141,7 @@ class Auth_Login : AppCompatActivity() {
         if (!isNavigating) {
             isNavigating = true
             val intent = Intent(this, destination)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
             finish()
         }

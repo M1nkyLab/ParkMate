@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "589692163671",
+    "firebase_url": "https://parkmate-96cef-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "parkmate-96cef",
+    "storage_bucket": "parkmate-96cef.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:589692163671:android:5856687a81b886e6cf3512",
+        "android_client_info": {
+          "package_name": "com.example.parkmate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "589692163671-9u8iu5ndn7tguivp09g0djeqce0r6kko.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.parkmate",
+            "certificate_hash": "d0baf5ca561533589951ddfd35dc2a6b81595fbc"
+          }
+        },
+        {
+          "client_id": "589692163671-9vq3muqagu53f2hbqo7atuc57tmforjf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjWfh6yWV-kU2cKLwRD2s_GK-DzEcmOoM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "589692163671-9vq3muqagu53f2hbqo7atuc57tmforjf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

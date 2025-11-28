@@ -4,6 +4,11 @@ ParkMate is a complete, end-to-end Android application designed to modernize and
 
 This system is built entirely on **Kotlin** for native Android performance and uses **Google Firebase** for its backend, including Authentication, Firestore (database), and ML Kit (for QR scanning).
 
+<div align="center">
+  <img src="ParkMate Project.jpg" alt="ParkMate App Screenshot" width="600">
+  <br><br>
+</div>
+
 ---
 
 ## 🚀 Features
